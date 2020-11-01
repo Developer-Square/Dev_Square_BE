@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { taskSchema } = require('./task.model');
 
 const userSchema = mongoose.Schema(
   {
@@ -40,6 +41,10 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'user',
     },
+    tasks: {
+      type: [taskSchema],
+      default: []
+    }
   },
   {
     timestamps: true,
