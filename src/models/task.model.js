@@ -32,8 +32,8 @@ const taskSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
+taskSchema.plugin(toJSON);
+taskSchema.plugin(paginate);
 
 /**
  * @typedef Task
