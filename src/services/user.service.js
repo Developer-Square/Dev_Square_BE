@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const { sendSignalToProcessName } = require('pm2');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
