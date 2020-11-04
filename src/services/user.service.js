@@ -67,6 +67,22 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 /**
+ * Update task by user Id
+ * @param {ObjectId} userId
+ * @param {Object} taskBody
+ * @returns {Promise<User>}
+ */
+const updateUserTaskById = async (userId, taskBody) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  await User.updateOne({$addToSet: {tasks: taskBody}});
+  await user.save();
+  return user;
+};
+
+/**
  * Delete user by id
  * @param {ObjectId} userId
  * @returns {Promise<User>}
@@ -87,4 +103,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateUserTaskById
 };
