@@ -1,54 +1,57 @@
 const Joi = require('@hapi/joi');
 const { password, objectId } = require('./custom.validation');
 
-const createUser = {
+const createTask = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    title: Joi.string().required(),
+    category: Joi.string().required(),
+    description: Joi.string().required(),
+    price: Joi.number().integer().required(),
+    difficulty: Joi.string().required().valid('beginner', 'intermediate', 'expert'),
   }),
 };
 
-const getUsers = {
+const queryTasks = {
   query: Joi.object().keys({
-    name: Joi.string(),
-    role: Joi.string(),
+    category: Joi.string(),
+    difficulty: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
 };
 
-const getUser = {
+const getTask = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    taskId: Joi.string().custom(objectId),
   }),
 };
 
-const updateUser = {
+const updateTask = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+    taskId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+        title: Joi.string(),
+        category: Joi.string(),
+        description: Joi.string(),
+        price: Joi.number().integer(),
+        difficulty: Joi.string().valid('beginner', 'intermediate', 'expert'),
     })
     .min(1),
 };
 
-const deleteUser = {
+const deleteTask = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    taskId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
+  createTask,
+  queryTasks,
+  getTask,
+  updateTask,
+  deleteTask,
 };
