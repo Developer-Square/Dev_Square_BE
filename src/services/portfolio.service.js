@@ -31,7 +31,7 @@ const queryItem = async (filter, options) => {
  * @returns {Promise<Portfolio>}
  */
 const getPortfolio = async () => {
-  return Portfolio.find();
+  return Portfolio.find({});
 };
 
 /**
