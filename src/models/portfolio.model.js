@@ -23,7 +23,8 @@ const portfolioSchema = mongoose.Schema(
       trim: true,
     },
     gallery: {
-      type: Array
+      type: Array,
+      trim: true
     },
   },
   {
