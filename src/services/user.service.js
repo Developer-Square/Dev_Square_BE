@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { sendSignalToProcessName } = require('pm2');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -69,15 +70,34 @@ const updateUserById = async (userId, updateBody) => {
 /**
  * Update task by user Id
  * @param {ObjectId} userId
- * @param {Object} taskBody
+ * @param {Object} taskId
  * @returns {Promise<User>}
  */
-const updateUserTaskById = async (userId, taskBody) => {
+const updateUserTaskById = async (userId, taskId) => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await User.updateOne({$addToSet: {tasks: taskBody}});
+  if(user.tasks.indexOf(taskId) != -1){
+    throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is already assigned the task');
+  }
+  user.tasks.push(taskId);
+  await user.save();
+  return user;
+};
+
+/**
+ * Update status by user Id
+ * @param {ObjectId} userId
+ * @param {String} newStatus
+ * @returns {Promise<User>}
+ */
+const updateStatusById = async (userId, newStatus) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  user.status = newStatus;
   await user.save();
   return user;
 };
@@ -103,5 +123,6 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
-  updateUserTaskById
+  updateUserTaskById,
+  updateStatusById
 };
