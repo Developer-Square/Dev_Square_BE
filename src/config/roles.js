@@ -1,4 +1,4 @@
-const roles = ['user', 'admin'];
+const roles = ['user', 'admin', 'developer'];
 
 const roleRights = new Map();
 roleRights.set(roles[0], []);

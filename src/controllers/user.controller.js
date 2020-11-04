@@ -40,7 +40,7 @@ const addTaskToUser = catchAsync(async (req, res) => {
 })
 
 const changeUserStatus = catchAsync(async (req, res) => {
-  const user = await userService.updateStatusById(req.params.userId);
+  const user = await userService.updateStatusById(req.params.userId, req.body.newStatus);
   res.send(user);
 })
 
