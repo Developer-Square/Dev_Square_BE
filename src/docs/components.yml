@@ -13,11 +13,59 @@ components:
         role:
           type: string
           enum: [user, admin]
+        skills:
+          type: array
+        status:
+          type: string
+          enum: [available, busy]
       example:
         id: 5ebac534954b54139806c112
         email: fake@example.com
         name: fake name
         role: user
+        skills: [JS, PHP, Java]
+        status: available
+    
+    Task:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, expert]
+      example:
+        title: Node Backend
+        category: JavaScript
+        description: A node backend for a taxi hailing company blah blah blah
+        price: 50000
+        difficulty: intermediate
+
+    Portfolio:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
+        gallery:
+          type: array
+      example:
+        title: Node Backend
+        category: JavaScript
+        description: A node backend for a taxi hailing company blah blah blah
+        link: http://asampleproject.com
+        gallery: [http://image1.com, http://image2.com]
 
     Token:
       type: object
