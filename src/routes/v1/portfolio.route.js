@@ -81,8 +81,6 @@ module.exports = router;
  *      summary: Get all Portfolio items
  *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
- *      security:
- *        - bearerAuth: []
  *      parameters:
  *        - in: query
  *          category: category
@@ -146,8 +144,6 @@ module.exports = router;
  *      summary: Get a portfolio item
  *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
- *      security:
- *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
