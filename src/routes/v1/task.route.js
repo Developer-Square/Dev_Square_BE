@@ -17,6 +17,10 @@ router
   .patch(auth('manageTasks'), validate(taskValidation.updateTask), taskController.updateTask)
   .delete(auth('manageTasks'), validate(taskValidation.deleteTask), taskController.deleteTask);
 
+router
+  .route('/user/:userId')
+  .get(auth('getTasks'), validate(taskValidation.getTaskByUserId), taskController.getTaskByUserId);
+
 module.exports = router;
 
 /**
@@ -242,6 +246,38 @@ module.exports = router;
  *      responses:
  *        "200":
  *          description: No content
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
+ *        "404":
+ *          $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * path:
+ *  /tasks/user/{id}:
+ *    get:
+ *      summary: Get tasks for single user
+ *      description: Only logged in admin users can retrieve their tasks.
+ *      tags: [Tasks, Users]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: User id
+ *      responses:
+ *        "200":
+ *          description: OK
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 $ref: '#/components/schemas/TaskList'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
