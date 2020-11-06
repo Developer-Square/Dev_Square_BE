@@ -79,7 +79,7 @@ module.exports = router;
  *
  *    get:
  *      summary: Get all Portfolio items
- *      description: Only admins can retrieve all portfolio items.
+ *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
  *      security:
  *        - bearerAuth: []
@@ -144,7 +144,7 @@ module.exports = router;
  *  /portfolio/{id}:
  *    get:
  *      summary: Get a portfolio item
- *      description: Users and admins can fetch portfolio items.
+ *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
  *      security:
  *        - bearerAuth: []
