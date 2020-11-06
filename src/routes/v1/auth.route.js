@@ -38,6 +38,9 @@ module.exports = router;
  *                - name
  *                - email
  *                - password
+ *                - role
+ *                - skills
+ *                - status
  *              properties:
  *                name:
  *                  type: string
@@ -50,10 +53,21 @@ module.exports = router;
  *                  format: password
  *                  minLength: 8
  *                  description: At least one number and one letter
+ *                role:
+ *                   type: string
+ *                   enum: [user, admin]
+ *                skills:
+ *                   type: array
+ *                status:
+ *                   type: string
+ *                   enum: [available,busy]
  *              example:
  *                name: fake name
  *                email: fake@example.com
  *                password: password1
+ *                role: admin
+ *                skills: [JS, PHP, Java]
+ *                status: 'available'
  *      responses:
  *        "201":
  *          description: Created
