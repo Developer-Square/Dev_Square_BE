@@ -80,7 +80,7 @@ module.exports = router;
  *    get:
  *      summary: Get all Portfolio items
  *      description: Only admins can retrieve all portfolio items.
- *      tags: [POrtfolio]
+ *      tags: [Portfolio]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -222,7 +222,7 @@ module.exports = router;
  *    delete:
  *      summary: Delete a portfolio item
  *      description: Only admins can delete portfolio items.
- *      tags: [[Portfolio]]
+ *      tags: [Portfolio]
  *      security:
  *        - bearerAuth: []
  *      parameters:
