@@ -27,6 +27,12 @@ const getTask = {
   }),
 };
 
+const getTaskByUserId = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 const updateTask = {
   params: Joi.object().keys({
     taskId: Joi.required().custom(objectId),
@@ -54,4 +60,5 @@ module.exports = {
   getTask,
   updateTask,
   deleteTask,
+  getTaskByUserId
 };

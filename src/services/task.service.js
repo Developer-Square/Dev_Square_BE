@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Task } = require('../models');
+const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -41,7 +42,18 @@ const getTasks = async () => {
  */
 const getTaskById = async (id) => {
     return Task.findById(id);
-  };
+};
+
+/**
+ * Get task by user id
+ * @param {ObjectId} id
+ * @returns {Promise<Task>}
+ */
+const getTaskByUserId = async (id) => {
+  const user = User.findById(id);
+  return user.tasks;
+};
+
 
 /**
  * Update item by id
@@ -80,4 +92,5 @@ module.exports = {
   getTasks,
   updateTaskById,
   deleteTaskById,
+  getTaskById
 };

@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema(
       default: 'user',
     },
     tasks: {
-      type: [taskSchema],
+      type: Array,
       default: []
     },
     skills: {

@@ -28,7 +28,8 @@ const taskSchema = mongoose.Schema(
     difficulty: {
       type: String,
       trim: true,
-      enum: ['beginner', 'intermediate', 'expert']
+      enum: ['beginner', 'intermediate', 'expert'],
+      required: true
     }
   },
   {
