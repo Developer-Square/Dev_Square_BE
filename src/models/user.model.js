@@ -48,12 +48,14 @@ const userSchema = mongoose.Schema(
       default: []
     },
     skills: {
-      type: Array
+      type: Array,
+      required: true
     },
     status: {
       type: String,
       default: 'available',
-      enum: userStatus
+      enum: userStatus,
+      required: true
     }
   },
   {
