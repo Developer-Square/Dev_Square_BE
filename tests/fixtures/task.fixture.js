@@ -26,11 +26,11 @@ const taskThree = {
     category: faker.lorem.word(),
     description: faker.lorem.paragraph(),
     price: faker.random.number(),
-    difficulty: 'expert'
+    difficulty: 'intermediate'
 }
 
 const insertTasks = async (tasks) => {
-    await Task.insertMany(tasks.map((task) => ({ ...task})));
+    await Task.insertMany(tasks.map((task) => ({ ...task })));
 }
 
 module.exports = {
