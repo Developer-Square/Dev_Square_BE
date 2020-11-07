@@ -5,7 +5,7 @@ const { Task } = require('../../src/models');
 const taskOne = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'node',
     description: faker.lorem.paragraph(),
     price: faker.random.number(),
     difficulty: 'beginner'
@@ -14,7 +14,7 @@ const taskOne = {
 const taskTwo = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'node',
     description: faker.lorem.paragraph(),
     price: faker.random.number(),
     difficulty: 'intermediate'
@@ -23,7 +23,7 @@ const taskTwo = {
 const taskThree = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'react',
     description: faker.lorem.paragraph(),
     price: faker.random.number(),
     difficulty: 'intermediate'

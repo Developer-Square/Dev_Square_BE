@@ -19,7 +19,7 @@ describe('Task routes', () => {
     beforeEach(() => {
       newTask = {
         title: faker.lorem.sentence(5),
-        category: faker.lorem.word(),
+        category: 'node',
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
         difficulty: 'beginner'
@@ -122,7 +122,7 @@ describe('Task routes', () => {
       const res = await request(app)
         .get('/v1/tasks')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ category: userOne.category })
+        .query({ category: taskOne.category })
         .send()
         .expect(httpStatus.OK);
 
@@ -131,9 +131,9 @@ describe('Task routes', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        totalResults: 1,
+        totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results).toHaveLength(2);
       expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
     });
 
@@ -203,9 +203,9 @@ describe('Task routes', () => {
         totalResults: 3,
       });
       expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0].id).toBe(taskThree._id.toHexString());
+      expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
       expect(res.body.results[1].id).toBe(taskTwo._id.toHexString());
-      expect(res.body.results[2].id).toBe(taskOne._id.toHexString());
+      expect(res.body.results[2].id).toBe(taskThree._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -256,12 +256,12 @@ describe('Task routes', () => {
 
   describe('GET /v1/tasks/:taskId', () => {
     test('should return 200 and the task object if data is ok', async () => {
-      await insertUsers([userOne]);
+      await insertUsers([admin]);
       await insertTasks([taskOne]);
 
       const res = await request(app)
         .get(`/v1/tasks/${taskOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
@@ -358,11 +358,11 @@ describe('Task routes', () => {
 
   describe('PATCH /v1/tasks/:taskId', () => {
     test('should return 200 and successfully update task if data is ok', async () => {
-      await insertUsers([userOne]);
+      await insertUsers([admin]);
       await insertTasks([taskOne]);
       const updateBody = {
         title: faker.lorem.sentence(5),
-        category: faker.lorem.word(),
+        category: 'node',
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
         difficulty: 'intermediate'
@@ -370,17 +370,17 @@ describe('Task routes', () => {
 
       const res = await request(app)
         .patch(`/v1/tasks/${taskOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         id: taskOne._id.toHexString(),
-        title: taskOne.title,
-        category: taskOne.category,
-        description: taskOne.description,
-        price: taskOne.price,
-        difficulty: taskOne.difficulty
+        title: updateBody.title,
+        category: updateBody.category,
+        description: updateBody.description,
+        price: updateBody.price,
+        difficulty: updateBody.difficulty
       });
 
       const dbTask = await Task.findById(taskOne._id);
