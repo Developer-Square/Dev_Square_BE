@@ -19,6 +19,9 @@ describe('User routes', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        tasks: [],
+        skills: ['JS', 'PHP', 'Django', 'C'],
+        status: 'available'
       };
     });
 
@@ -32,12 +35,12 @@ describe('User routes', () => {
         .expect(httpStatus.CREATED);
 
       expect(res.body).not.toHaveProperty('password');
-      expect(res.body).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role });
+      expect(res.body).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status});
 
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role });
+      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
     });
 
     test('should be able to create an admin as well', async () => {
@@ -56,7 +59,7 @@ describe('User routes', () => {
       expect(dbUser.role).toBe('admin');
     });
 
-    test('should return 401 error is access token is missing', async () => {
+    test('should return 401 error if access token is missing', async () => {
       await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
     });
 
@@ -125,6 +128,17 @@ describe('User routes', () => {
     test('should return 400 error if role is neither user nor admin', async () => {
       await insertUsers([admin]);
       newUser.role = 'invalid';
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is neither available nor busy', async () => {
+      await insertUsers([admin]);
+      newUser.status = 'invalid';
 
       await request(app)
         .post('/v1/users')
