@@ -5,6 +5,8 @@ const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 const { taskSchema } = require('./task.model');
 
+const userStatus = ['available','busy'];
+
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -47,6 +49,11 @@ const userSchema = mongoose.Schema(
     },
     skills: {
       type: Array
+    },
+    status: {
+      type: String,
+      default: 'available',
+      enum: userStatus
     }
   },
   {

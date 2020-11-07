@@ -67,6 +67,41 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 /**
+ * Update task by user Id
+ * @param {ObjectId} userId
+ * @param {Object} taskId
+ * @returns {Promise<User>}
+ */
+const updateUserTaskById = async (userId, taskId) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if(user.tasks.indexOf(taskId) != -1){
+    throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is already assigned the task');
+  }
+  user.tasks.push(taskId);
+  await user.save();
+  return user;
+};
+
+/**
+ * Update status by user Id
+ * @param {ObjectId} userId
+ * @param {String} newStatus
+ * @returns {Promise<User>}
+ */
+const updateStatusById = async (userId, newStatus) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  user.status = newStatus;
+  await user.save();
+  return user;
+};
+
+/**
  * Delete user by id
  * @param {ObjectId} userId
  * @returns {Promise<User>}
@@ -87,4 +122,6 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateUserTaskById,
+  updateStatusById
 };
