@@ -607,7 +607,7 @@ describe('User routes', () => {
     });
 
     test('should return 400 error if status is neither available nor busy', async () => {
-      await insertUsers([admin]);
+      await insertUsers([userOne]);
       const updateBody = { status: 'invalid' };
 
       await request(app)
