@@ -1,0 +1,41 @@
+const mongoose = require('mongoose');
+const faker = require('faker');
+const { Task } = require('../../src/models');
+
+const taskOne = {
+    _id: mongoose.Types.ObjectId(),
+    title: faker.lorem.sentence(5),
+    category: faker.lorem.word(),
+    description: faker.lorem.paragraph(),
+    price: faker.random.number(),
+    difficulty: 'beginner'
+}
+
+const taskTwo = {
+    _id: mongoose.Types.ObjectId(),
+    title: faker.lorem.sentence(5),
+    category: faker.lorem.word(),
+    description: faker.lorem.paragraph(),
+    price: faker.random.number(),
+    difficulty: 'intermediate'
+}
+
+const taskThree = {
+    _id: mongoose.Types.ObjectId(),
+    title: faker.lorem.sentence(5),
+    category: faker.lorem.word(),
+    description: faker.lorem.paragraph(),
+    price: faker.random.number(),
+    difficulty: 'expert'
+}
+
+const insertTasks = async (tasks) => {
+    await Task.insertMany(tasks.map((task) => ({ ...task})));
+}
+
+module.exports = {
+  taskOne,
+  taskTwo,
+  taskThree,
+  insertTasks,
+};
