@@ -49,6 +49,7 @@ const userSchema = mongoose.Schema(
     },
     skills: {
       type: Array,
+      default: [],
       required: true
     },
     status: {

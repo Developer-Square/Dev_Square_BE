@@ -10,6 +10,9 @@ describe('User model', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        tasks: [],
+        skills: ['JS', 'PHP', 'Django', 'C'],
+        status: 'available'
       };
     });
 
@@ -41,6 +44,11 @@ describe('User model', () => {
       newUser.role = 'invalid';
       await expect(new User(newUser).validate()).rejects.toThrow();
     });
+
+    test('should throw a validation error if status is unknown', async () => {
+      newUser.status = 'invalid';
+      await expect(new User(newUser).validate()).rejects.toThrow();
+    });
   });
 
   describe('User toJSON()', () => {
@@ -50,6 +58,9 @@ describe('User model', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        tasks: [],
+        skills: ['JS', 'PHP', 'Django', 'C'],
+        status: 'available'
       };
       expect(new User(newUser).toJSON()).not.toHaveProperty('password');
     });
