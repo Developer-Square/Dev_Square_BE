@@ -5,7 +5,7 @@ const { Portfolio } = require('../../src/models');
 const itemOne = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'react',
     description: faker.lorem.paragraph(),
     link: faker.internet.url(),
     gallery: [faker.internet.url(), faker.internet.url()]
@@ -14,7 +14,7 @@ const itemOne = {
 const itemTwo = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'react',
     description: faker.lorem.paragraph(),
     link: faker.internet.url(),
     gallery: [faker.internet.url()]
@@ -23,7 +23,7 @@ const itemTwo = {
 const itemThree = {
     _id: mongoose.Types.ObjectId(),
     title: faker.lorem.sentence(5),
-    category: faker.lorem.word(),
+    category: 'django',
     description: faker.lorem.paragraph(),
     link: faker.internet.url(),
     gallery: [faker.internet.url(), faker.internet.url(), faker.internet.url()]

@@ -14,7 +14,7 @@ router
 router
   .route('/:taskId')
   .get(auth('getPortfolio'), validate(portfolioValidation.getItem), portfolioController.getItem)
-  .patch(auth('mmanagePortfolio'), validate(portfolioValidation.updateItem), portfolioController.updateItem)
+  .patch(auth('managePortfolio'), validate(portfolioValidation.updateItem), portfolioController.updateItem)
   .delete(auth('managePortfolio'), validate(portfolioValidation.deleteItem), portfolioController.deleteItem);
 
 module.exports = router;
