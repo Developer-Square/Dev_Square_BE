@@ -1,4 +1,5 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
@@ -171,6 +172,9 @@ describe('User routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
+        tasks: userOne.tasks,
+        skills: userOne.skills,
+        status: userOne.status
       });
     });
 
@@ -339,6 +343,9 @@ describe('User routes', () => {
         email: userOne.email,
         name: userOne.name,
         role: userOne.role,
+        tasks: userOne.tasks,
+        skills: userOne.skills,
+        status: userOne.status
       });
     });
 
@@ -457,6 +464,9 @@ describe('User routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
+        tasks: ['54abhsgsfsgffssdd', '54abhsgsfsgffssde'],
+        skills: ['Java', 'C#'],
+        status: 'busy'
       };
 
       const res = await request(app)
@@ -471,12 +481,15 @@ describe('User routes', () => {
         name: updateBody.name,
         email: updateBody.email,
         role: 'user',
+        tasks: updateBody.tasks,
+        skills: updateBody.skills,
+        status: updateBody.status
       });
 
       const dbUser = await User.findById(userOne._id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user' });
+      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user', tasks: updateBody.tasks, skills: updateBody.skills, status: updateBody.status });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -585,6 +598,17 @@ describe('User routes', () => {
         .expect(httpStatus.BAD_REQUEST);
 
       updateBody.password = '11111111';
+
+      await request(app)
+        .patch(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is neither available nor busy', async () => {
+      await insertUsers([admin]);
+      const updateBody = { status: 'invalid' };
 
       await request(app)
         .patch(`/v1/users/${userOne._id}`)
