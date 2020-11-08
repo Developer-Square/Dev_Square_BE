@@ -118,6 +118,50 @@ yarn prettier
 yarn prettier:fix
 ```
 
+## Creating an Admin User
+
+Please create an admin user before using the APIs as a normal user does not have most privileges
+
+Steps for creating admin user using **mongo shell**
+
+1. Make sure you have mongo installed
+
+2. Run
+```bash
+# run yarn dev to create the database
+yarn dev
+
+```
+
+3. Open another terminal (I use vscode but you can use other apps)
+
+4. 
+```bash
+# run mongo to initialize mongo
+mongo
+
+# run show dbs after the mongo cursor appears to display the available databases
+show dbs
+
+# you should see either devSquareBE or node-boilerplate depending on your .env file settings
+# run use [dbname] to select a database
+use devSquareBE
+
+# the terminal should confirm the switch
+# run show collections to display available collections (users, tasks, portfolio, token etc)
+show collections
+
+# next step is to create user
+# run db.[collection].insert({ name: "your name", email: "your email", password: "password1", role: "admin" })
+# make sure your name and email are unique and the role is 'admin' e.g.
+db.users.insert({ name: "clark kent", email: "clark@example.com", password: "password1", role: "admin" })
+
+# confirm that your user is added by running db.users.find({ name: "your name" }).pretty() e.g.
+db.users.find({ name: "clark kent" }).pretty()
+
+# You can use the email and password to login
+```
+
 ## Project Structure
 
 ```
