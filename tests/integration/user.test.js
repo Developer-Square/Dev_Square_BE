@@ -41,7 +41,7 @@ describe('User routes', () => {
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
+      expect(dbUser).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
     });
 
     test('should be able to create an admin as well', async () => {
