@@ -20,7 +20,7 @@ describe('User routes', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
-        tasks: [],
+        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
         skills: ['JS', 'PHP', 'Django', 'C'],
         status: 'available'
       };
@@ -464,7 +464,7 @@ describe('User routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
-        tasks: ['54abhsgsfsgffssdd', '54abhsgsfsgffssde'],
+        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
         skills: ['Java', 'C#'],
         status: 'busy'
       };

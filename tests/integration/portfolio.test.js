@@ -283,7 +283,7 @@ describe('Portfolio routes', () => {
         .send()
         .expect(httpStatus.NO_CONTENT);
 
-      const dbItem = await item.findById(itemOne._id);
+      const dbItem = await Portfolio.findById(itemOne._id);
       expect(dbItem).toBeNull();
     });
 
@@ -349,7 +349,7 @@ describe('Portfolio routes', () => {
         gallery: updateBody.gallery
       });
 
-      const dbItem = await item.findById(itemOne._id);
+      const dbItem = await Portfolio.findById(itemOne._id);
       expect(dbItem).toBeDefined();
       expect(dbItem).toMatchObject({ title: updateBody.title, category: updateBody.category, description: updateBody.description, link: updateBody.link, gallery: updateBody.gallery });
     });

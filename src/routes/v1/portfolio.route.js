@@ -12,7 +12,7 @@ router
   .get(auth('getPortfolio'), validate(portfolioValidation.queryPortfolio), portfolioController.queryPortfolio);
 
 router
-  .route('/:taskId')
+  .route('/:itemId')
   .get(auth('getPortfolio'), validate(portfolioValidation.getItem), portfolioController.getItem)
   .patch(auth('managePortfolio'), validate(portfolioValidation.updateItem), portfolioController.updateItem)
   .delete(auth('managePortfolio'), validate(portfolioValidation.deleteItem), portfolioController.deleteItem);
@@ -81,6 +81,8 @@ module.exports = router;
  *      summary: Get all Portfolio items
  *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: query
  *          category: category
@@ -144,6 +146,8 @@ module.exports = router;
  *      summary: Get a portfolio item
  *      description: All users can retrieve portfolio items.
  *      tags: [Portfolio]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
