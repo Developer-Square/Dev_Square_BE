@@ -164,7 +164,7 @@ db.users.find({ name: "clark kent" }).pretty()
 5. Use your email and password below to login. **Don't change the password**
 ```json
 {
-  "name": "your name",
+  "email": "clark@example.com",
   "password": "password1"
 }
 ```
