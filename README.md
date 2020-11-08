@@ -160,7 +160,13 @@ db.users.insert({ name: "clark kent", email: "clark@example.com", password: "$2a
 # confirm that your user is added by running db.users.find({ name: "your name" }).pretty() e.g.
 db.users.find({ name: "clark kent" }).pretty()
 
-# You can use the email and password to login
+```
+5. Use your email and password below to login. **Don't change the password**
+```json
+{
+  "name": "your name",
+  "password": "password1"
+}
 ```
 
 ## Project Structure
