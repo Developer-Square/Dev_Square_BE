@@ -152,9 +152,10 @@ use devSquareBE
 show collections
 
 # next step is to create user
-# run db.[collection].insert({ name: "your name", email: "your email", password: "password1", role: "admin" })
+# run db.[collection].insert({ name: "your name", email: "your email", password: "$2a$08$tOAoyypxrl9EQnsnB8zP/OFmWd4OCHOwC2e1HbNKV4DkBzcE7XaAi", role: "admin" })
+# **Don't change the password. It's hashed**
 # make sure your name and email are unique and the role is 'admin' e.g.
-db.users.insert({ name: "clark kent", email: "clark@example.com", password: "password1", role: "admin" })
+db.users.insert({ name: "clark kent", email: "clark@example.com", password: "$2a$08$tOAoyypxrl9EQnsnB8zP/OFmWd4OCHOwC2e1HbNKV4DkBzcE7XaAi", role: "admin" })
 
 # confirm that your user is added by running db.users.find({ name: "your name" }).pretty() e.g.
 db.users.find({ name: "clark kent" }).pretty()
