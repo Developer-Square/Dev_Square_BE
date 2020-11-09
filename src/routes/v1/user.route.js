@@ -13,9 +13,14 @@ router
 
 router
   .route('/:userId')
+  .post(auth('manageUsers'), validate(userValidation.assignTask), userController.addTaskToUser)
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+
+router
+  .route('/status/:userId')
+  .post(auth('manageUsers'), validate(userValidation.changeStatus), userController.changeUserStatus);
 
 module.exports = router;
 
@@ -47,6 +52,8 @@ module.exports = router;
  *                - email
  *                - password
  *                - role
+ *                - skills
+ *                - status
  *              properties:
  *                name:
  *                  type: string
@@ -62,11 +69,17 @@ module.exports = router;
  *                role:
  *                   type: string
  *                   enum: [user, admin]
+ *                skills:
+ *                   type: array
+ *                status:
+ *                   type: string
+ *                   enum: [available,busy]
  *              example:
  *                name: fake name
  *                email: fake@example.com
  *                password: password1
  *                role: user
+ *                skills: [JS, PHP, Java]
  *      responses:
  *        "201":
  *          description: Created
@@ -151,6 +164,44 @@ module.exports = router;
  * @swagger
  * path:
  *  /users/{id}:
+ *    post:
+ *      summary: Assign task to a user
+ *      description: A user can only assign a task to themselves
+ *      tags: [Users, Tasks]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: User id
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - taskId
+ *              properties:
+ *                taskId:
+ *                  type: string
+ *              example:
+ *                taskId: afafdhftraaddahagag
+ *      responses:
+ *        "201":
+ *          description: Created
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
+ * 
  *    get:
  *      summary: Get a user
  *      description: Logged in users can fetch only their own user information. Only admins can fetch other users.
@@ -251,4 +302,47 @@ module.exports = router;
  *          $ref: '#/components/responses/Forbidden'
  *        "404":
  *          $ref: '#/components/responses/NotFound'
+ */
+
+ /**
+ * @swagger
+ * path:
+ *  /users/status/{id}:
+ *    post:
+ *      summary: Change the status of a user
+ *      description: Logged in users can change their status. Only admins can change everyone's status
+ *      tags: [Users, Status]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: User id
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - newStatus
+ *              properties:
+ *                newStatus:
+ *                  type: string
+ *              example:
+ *                newStatus: available
+ *      responses:
+ *        "201":
+ *          description: Created
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
  */

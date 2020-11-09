@@ -1,4 +1,5 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
@@ -19,6 +20,9 @@ describe('User routes', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
+        skills: ['JS', 'PHP', 'Django', 'C'],
+        status: 'available'
       };
     });
 
@@ -32,12 +36,16 @@ describe('User routes', () => {
         .expect(httpStatus.CREATED);
 
       expect(res.body).not.toHaveProperty('password');
-      expect(res.body).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role });
+      expect(res.body).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status});
 
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role });
+      // expect(dbUser).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
+      expect(dbUser.name).toBe(newUser.name);
+      expect(dbUser.email).toBe(newUser.email);
+      expect(dbUser.role).toBe(newUser.role);
+      expect(dbUser.status).toBe(newUser.status);
     });
 
     test('should be able to create an admin as well', async () => {
@@ -56,7 +64,7 @@ describe('User routes', () => {
       expect(dbUser.role).toBe('admin');
     });
 
-    test('should return 401 error is access token is missing', async () => {
+    test('should return 401 error if access token is missing', async () => {
       await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
     });
 
@@ -132,6 +140,17 @@ describe('User routes', () => {
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 400 error if status is neither available nor busy', async () => {
+      await insertUsers([admin]);
+      newUser.status = 'invalid';
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
 
   describe('GET /v1/users', () => {
@@ -157,6 +176,9 @@ describe('User routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
+        tasks: userOne.tasks,
+        skills: userOne.skills,
+        status: userOne.status
       });
     });
 
@@ -325,6 +347,9 @@ describe('User routes', () => {
         email: userOne.email,
         name: userOne.name,
         role: userOne.role,
+        tasks: userOne.tasks,
+        skills: userOne.skills,
+        status: userOne.status
       });
     });
 
@@ -443,6 +468,9 @@ describe('User routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
+        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
+        skills: ['Java', 'C#'],
+        status: 'busy'
       };
 
       const res = await request(app)
@@ -457,12 +485,18 @@ describe('User routes', () => {
         name: updateBody.name,
         email: updateBody.email,
         role: 'user',
+        tasks: updateBody.tasks,
+        skills: updateBody.skills,
+        status: updateBody.status
       });
 
       const dbUser = await User.findById(userOne._id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user' });
+      // expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user', tasks: updateBody.tasks, skills: updateBody.skills, status: updateBody.status });
+      expect(dbUser.name).toBe(updateBody.name);
+      expect(dbUser.email).toBe(updateBody.email);
+      expect(dbUser.status).toBe(updateBody.status);
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -571,6 +605,17 @@ describe('User routes', () => {
         .expect(httpStatus.BAD_REQUEST);
 
       updateBody.password = '11111111';
+
+      await request(app)
+        .patch(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is neither available nor busy', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { status: 'invalid' };
 
       await request(app)
         .patch(`/v1/users/${userOne._id}`)

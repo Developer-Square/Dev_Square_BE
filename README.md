@@ -118,6 +118,57 @@ yarn prettier
 yarn prettier:fix
 ```
 
+## Creating an Admin User
+
+Please create an admin user before using the APIs as a normal user does not have most privileges
+
+Steps for creating admin user using **mongo shell**
+
+1. Make sure you have mongo installed
+
+2. Run
+```bash
+# run yarn dev to create the database
+yarn dev
+
+```
+
+3. Open another terminal (I use vscode but you can use other apps)
+
+4. 
+```bash
+# run mongo to initialize mongo
+mongo
+
+# run show dbs after the mongo cursor appears to display the available databases
+show dbs
+
+# you should see either devSquareBE or node-boilerplate depending on your .env file settings
+# run use [dbname] to select a database
+use devSquareBE
+
+# the terminal should confirm the switch
+# run show collections to display available collections (users, tasks, portfolio, token etc)
+show collections
+
+# next step is to create user
+# run db.[collection].insert({ name: "your name", email: "your email", password: "$2a$08$tOAoyypxrl9EQnsnB8zP/OFmWd4OCHOwC2e1HbNKV4DkBzcE7XaAi", role: "admin" })
+# **Don't change the password. It's hashed**
+# make sure your name and email are unique and the role is 'admin' e.g.
+db.users.insert({ name: "clark kent", email: "clark@example.com", password: "$2a$08$tOAoyypxrl9EQnsnB8zP/OFmWd4OCHOwC2e1HbNKV4DkBzcE7XaAi", role: "admin" })
+
+# confirm that your user is added by running db.users.find({ name: "your name" }).pretty() e.g.
+db.users.find({ name: "clark kent" }).pretty()
+
+```
+5. Use your email and password below to login. **Don't change the password**
+```json
+{
+  "email": "clark@example.com",
+  "password": "password1"
+}
+```
+
 ## Project Structure
 
 ```
@@ -366,10 +417,6 @@ To modify the ESLint configuration, update the `.eslintrc.json` file. To modify 
 To prevent a certain file or directory from being linted, add it to `.eslintignore` and `.prettierignore`.
 
 To maintain a consistent coding style across different IDEs, the project contains `.editorconfig`
-
-## Contributing
-
-Contributions are more than welcome! Please check out the [contributing guide](CONTRIBUTING.md).
 
 ## License
 

@@ -4,7 +4,7 @@ const config = require('../config/config');
 const swaggerDef = {
   openapi: '3.0.0',
   info: {
-    title: 'node-express-mongoose-boilerplate API documentation',
+    title: 'Developer Square Node Backend',
     version,
     license: {
       name: 'MIT',

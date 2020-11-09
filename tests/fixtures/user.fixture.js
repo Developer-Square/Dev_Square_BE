@@ -13,6 +13,9 @@ const userOne = {
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'user',
+  tasks: [],
+  skills: ['JS', 'PHP', 'Django'],
+  status: 'available'
 };
 
 const userTwo = {
@@ -21,6 +24,9 @@ const userTwo = {
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'user',
+  tasks: [],
+  skills: ['JS', 'PHP', 'C'],
+  status: 'busy'
 };
 
 const admin = {
@@ -29,6 +35,9 @@ const admin = {
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'admin',
+  tasks: [],
+  skills: ['JS', 'PHP', 'Django', 'C'],
+  status: 'available'
 };
 
 const insertUsers = async (users) => {
