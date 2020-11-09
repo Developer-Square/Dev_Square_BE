@@ -727,4 +727,134 @@ describe('User routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
   });
+
+  describe('POST /v1/users/:userId', () => {
+    test('should return 200 and successfully update user tasks if data is ok', async () => {
+      await insertUsers([admin, userOne]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      }
+
+      const res = await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+
+      expect(res.body).not.toHaveProperty('password');
+      expect(res.body).toEqual({
+        id: userOne._id.toHexString(),
+        name: userOne.name,
+        email: userOne.email,
+        role: 'user',
+        tasks: [...userOne.tasks, updateBody.taskId],
+        skills: userOne.skills,
+        status: userOne.status
+      });
+
+      const dbUser = await User.findById(userOne._id);
+      expect(dbUser).toBeDefined();
+      expect(dbUser.tasks).toContain(updateBody.taskId);
+    });
+
+    test('should return 406 if user is already assigned task', async () => {
+      await insertUsers([userOne]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c113'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_ACCEPTABLE);
+    });
+
+    test('should return 401 error if access token is missing', async () => {
+      await insertUsers([userOne]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app).post(`/v1/users/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
+    });
+
+    test('should return 200 if user is updating their tasks', async () => {
+      await insertUsers([userOne]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+    });
+
+    test('should return 403 if user is updating the tasks of another user', async () => {
+      await insertUsers([userOne, userTwo]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userTwo._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 200 and successfully update user if admin is updating another user tasks', async () => {
+      await insertUsers([userOne, admin]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+    });
+
+    test('should return 404 if admin is updating another user tasks and user is not found', async () => {
+      await insertUsers([admin]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 400 error if userId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c112'
+      };
+
+      await request(app)
+        .post(`/v1/users/invalidId`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if taskId is not a valid mongo id', async () => {
+      await insertUsers([admin, userOne]);
+      const updateBody = {
+        taskId: 'invalid'
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+  });
 });

@@ -13,7 +13,7 @@ const userOne = {
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'user',
-  tasks: [],
+  tasks: ['5ebac534954b54139806c113'],
   skills: ['JS', 'PHP', 'Django'],
   status: 'available'
 };
