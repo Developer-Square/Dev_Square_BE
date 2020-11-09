@@ -56,7 +56,7 @@ const assignTask = {
     userId: Joi.string().custom(objectId),
   }),
   body: Joi.object().keys({
-    taskId: Joi.string().required()
+    taskId: Joi.string().required().custom(objectId)
   })
 }
 
