@@ -661,6 +661,17 @@ describe('User routes', () => {
       await request(app).post(`/v1/users/status/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
+    test('should return 200 if user is updating their status', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { newStatus: 'busy' };
+
+      await request(app)
+        .post(`/v1/users/status/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+    });
+
     test('should return 403 if user is updating the status of another user', async () => {
       await insertUsers([userOne, userTwo]);
       const updateBody = { newStatus: 'busy' };
