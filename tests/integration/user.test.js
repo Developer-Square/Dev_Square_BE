@@ -41,7 +41,11 @@ describe('User routes', () => {
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
+      // expect(dbUser).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status });
+      expect(dbUser.name).toBe(newUser.name);
+      expect(dbUser.email).toBe(newUser.email);
+      expect(dbUser.role).toBe(newUser.role);
+      expect(dbUser.status).toBe(newUser.status);
     });
 
     test('should be able to create an admin as well', async () => {
@@ -489,7 +493,10 @@ describe('User routes', () => {
       const dbUser = await User.findById(userOne._id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user', tasks: updateBody.tasks, skills: updateBody.skills, status: updateBody.status });
+      // expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user', tasks: updateBody.tasks, skills: updateBody.skills, status: updateBody.status });
+      expect(dbUser.name).toBe(updateBody.name);
+      expect(dbUser.email).toBe(updateBody.email);
+      expect(dbUser.status).toBe(updateBody.status);
     });
 
     test('should return 401 error if access token is missing', async () => {
