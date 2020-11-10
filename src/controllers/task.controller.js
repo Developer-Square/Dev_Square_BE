@@ -16,14 +16,6 @@ const queryTasks = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-const getTasks = catchAsync(async (req, res) => {
-  const tasks = await taskService.getTasks();
-  if (!tasks) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
-  }
-  res.send(tasks);
-});
-
 const getTask = catchAsync(async (req, res) => {
     const task = await taskService.getTaskById(req.params.taskId);
     if (!task) {
@@ -31,14 +23,6 @@ const getTask = catchAsync(async (req, res) => {
     }
     res.send(task);
 });
-
-const getTaskByUserId = catchAsync(async (req, res) => {
-  const tasks = await taskService.getTaskByUserId(req.params.userId);
-  if (!tasks){
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
-  }
-  res.send(tasks);
-})
 
 const updateTask = catchAsync(async (req, res) => {
   const task = await taskService.updateTaskById(req.params.taskId, req.body);
@@ -54,9 +38,7 @@ const deleteTask = catchAsync(async (req, res) => {
 module.exports = {
   createTask,
   queryTasks,
-  getTasks,
   getTask,
   updateTask,
-  deleteTask,
-  getTaskByUserId
+  deleteTask
 };

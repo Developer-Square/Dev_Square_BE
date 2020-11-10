@@ -22,6 +22,10 @@ router
   .route('/status/:userId')
   .post(auth('manageUsers'), validate(userValidation.changeStatus), userController.changeUserStatus);
 
+router
+  .route('/tasks/:userId')
+  .get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks);
+
 module.exports = router;
 
 /**
@@ -335,12 +339,42 @@ module.exports = router;
  *              example:
  *                newStatus: available
  *      responses:
- *        "201":
+ *        "200":
  *          description: Created
  *          content:
  *            application/json:
  *              schema:
  *                 $ref: '#/components/schemas/User'
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
+ */
+
+  /**
+ * @swagger
+ * path:
+ *  /users/tasks/{id}:
+ *    get:
+ *      summary: Get the tasks of a user
+ *      description: Logged in users can get their tasks. Only admins can get everyone's tasks
+ *      tags: [Users, Tasks]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: User id
+ *      responses:
+ *        "200":
+ *          description: OK
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 $ref: '#/components/schemas/TaskList'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
