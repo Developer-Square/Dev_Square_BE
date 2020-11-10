@@ -118,6 +118,7 @@ yarn prettier
 yarn prettier:fix
 ```
 
+<!--
 ## Creating an Admin User
 
 Please create an admin user before using the APIs as a normal user does not have most privileges
@@ -168,6 +169,7 @@ db.users.find({ name: "clark kent" }).pretty()
   "password": "password1"
 }
 ```
+-->
 
 ## Project Structure
 
