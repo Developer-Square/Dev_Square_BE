@@ -48,6 +48,19 @@ const getUserByEmail = async (email) => {
 };
 
 /**
+ * Get user tasks by id
+ * @param {ObjectId} userId
+ * @returns {Promise<User>}
+ */
+const getUserTasks = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return {tasks: user.tasks};
+};
+
+/**
  * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateBody
@@ -123,5 +136,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   updateUserTaskById,
-  updateStatusById
+  updateStatusById,
+  getUserTasks
 };

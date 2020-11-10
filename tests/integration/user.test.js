@@ -857,4 +857,76 @@ describe('User routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
   });
+
+  describe('GET /v1/users/tasks/:userId', () => {
+    test('should return 200 and the user"s tasks if data is ok', async () => {
+      await insertUsers([admin, userOne]);
+
+      const res = await request(app)
+        .get(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        tasks: userOne.tasks,
+      });
+    });
+
+    test('should return 401 error if access token is missing', async () => {
+      await insertUsers([userOne]);
+
+      await request(app).get(`/v1/users/tasks/${userOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+    });
+
+    test('should return 403 error if user is trying to get another user"s tasks', async () => {
+      await insertUsers([userOne, userTwo]);
+
+      await request(app)
+        .get(`/v1/users/tasks/${userTwo._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 200 and the task object if admin is trying to get another user"s tasks', async () => {
+      await insertUsers([userOne, admin]);
+
+      await request(app)
+        .get(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
+    });
+
+    test('should return 400 error if userId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
+
+      await request(app)
+        .get('/v1/users/tasks/invalidId')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 404 error if user is not found', async () => {
+      await insertUsers([admin]);
+
+      await request(app)
+        .get(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    // test('should return 404 error if user is not assigned any tasks', async () => {
+    //   await insertUsers([admin, userTwo]);
+
+    //   await request(app)
+    //     .get(`/v1/users/tasks/${userTwo._id}`)
+    //     .set('Authorization', `Bearer ${adminAccessToken}`)
+    //     .send()
+    //     .expect(httpStatus.NOT_FOUND);
+    // });
+  });
 });

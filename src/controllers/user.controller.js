@@ -39,6 +39,11 @@ const addTaskToUser = catchAsync(async (req, res) => {
   res.send(user);
 })
 
+const getUserTasks = catchAsync(async (req, res) => {
+  const tasks = await userService.getUserTasks(req.params.userId);
+  res.send(tasks);
+})
+
 const changeUserStatus = catchAsync(async (req, res) => {
   const user = await userService.updateStatusById(req.params.userId, req.body.newStatus);
   res.send(user);
@@ -51,5 +56,6 @@ module.exports = {
   updateUser,
   deleteUser,
   addTaskToUser,
-  changeUserStatus
+  changeUserStatus,
+  getUserTasks
 };

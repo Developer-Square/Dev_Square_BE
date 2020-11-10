@@ -80,9 +80,12 @@ components:
         expires: 2020-05-12T16:18:04.793Z
     
     TaskList:
-      type: array
+      type: object
+      properties:
+        tasks:
+          type: array
       example:
-        [5ebac534954b54139806c112, 5ebac534954b54139806c113, 5ebac534954b54139806c112]
+        tasks: [5ebac534954b54139806c112, 5ebac534954b54139806c113, 5ebac534954b54139806c112]
 
     AuthTokens:
       type: object

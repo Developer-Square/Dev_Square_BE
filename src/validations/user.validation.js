@@ -51,6 +51,12 @@ const deleteUser = {
   }),
 };
 
+const getUserTasks = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 const assignTask = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),
@@ -76,5 +82,6 @@ module.exports = {
   updateUser,
   deleteUser,
   assignTask,
-  changeStatus
+  changeStatus,
+  getUserTasks
 };

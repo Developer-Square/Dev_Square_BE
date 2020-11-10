@@ -4,7 +4,6 @@ const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const { User } = require('../../src/models');
 const { Task } = require('../../src/models');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
@@ -281,8 +280,6 @@ describe('Task routes', () => {
       await request(app).get(`/v1/tasks/${taskOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    // getting someone else's tasks
-
     test('should return 400 error if taskId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
@@ -394,10 +391,6 @@ describe('Task routes', () => {
 
       await request(app).patch(`/v1/tasks/${taskOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
-
-    // user updating another user's tasks
-
-    // admin updating another user's tasks
 
     test('should return 404 if admin is updating task that is not found', async () => {
       await insertUsers([admin]);
