@@ -11,9 +11,11 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(async() => {
     logger.info(`Listening to port ${config.port}`);
   });
 
-  setTimeout(async() => {
-    await userService.createAdmin();
-  }, 100)
+  if(config.env === 'development'){
+    setTimeout(async() => {
+      await userService.createAdmin();
+    }, 100)
+  }
 });
 
 const exitHandler = () => {
