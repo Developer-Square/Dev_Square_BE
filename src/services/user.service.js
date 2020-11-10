@@ -3,6 +3,8 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const prompt = require('prompt');
+const adminProperties = require('../config/admin');
 
 /**
  * Create a user
@@ -24,10 +26,31 @@ const createUser = async (userBody) => {
 const createAdmin = async () => {
   const admin = await User.findOne({ name: config.admin.name });
   if(!admin){
-    const user = await User.create(config.admin);
-    logger.info('Admin created...Use the default configs');
+    prompt.start();
+    prompt.message = 'Password'
+
+    prompt.get(adminProperties, async function (err, result) {
+      if (err) { 
+        console.log(err);
+        // return 1; 
+      }
+      await User.create({
+        name: config.admin.name,
+        password: result.password,
+        email: config.admin.email,
+        role: config.admin.role
+      })
+      if(result.password === config.admin.password){
+        logger.info('Admin created with default configs. Use the email and password in your environment variables to login');
+      }else{
+        logger.info('Admin created with new password. Use the email in your environment variables and your new password to login');
+      }
+    });
+
+    // const user = await User.create(config.admin);
+    // logger.info('Admin created...Use the default configs');
   }else{
-    logger.warn('Admin exists....');
+    logger.info('Admin exists....');
   }
 };
 
