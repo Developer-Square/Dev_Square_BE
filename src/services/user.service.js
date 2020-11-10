@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const config = require('../config/config');
+const logger = require('../config/logger');
 
 /**
  * Create a user
@@ -13,6 +15,20 @@ const createUser = async (userBody) => {
   }
   const user = await User.create(userBody);
   return user;
+};
+
+/**
+ * Create initial admin user
+ * @returns {Promise<User>}
+ */
+const createAdmin = async () => {
+  const admin = await User.findOne({ name: config.admin.name });
+  if(!admin){
+    const user = await User.create(config.admin);
+    logger.info('Admin created...Use the default configs');
+  }else{
+    logger.warn('Admin exists....');
+  }
 };
 
 /**
@@ -137,5 +153,6 @@ module.exports = {
   deleteUserById,
   updateUserTaskById,
   updateStatusById,
-  getUserTasks
+  getUserTasks,
+  createAdmin
 };
