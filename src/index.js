@@ -3,15 +3,15 @@ const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 const { userService } = require('./services');
-require('dotenv').config();
+// require('dotenv').config();
 
-const port = process.env.PORT || 3000;
-const host = process.env.HOST || '0.0.0.0';
+// const port = process.env.PORT || 3000;
+// const host = process.env.HOST || '0.0.0.0';
 
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => {
   logger.info('Connected to MongoDB');
-  server = app.listen(port, host, () => {
+  server = app.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
