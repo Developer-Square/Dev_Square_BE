@@ -8,7 +8,7 @@ require('dotenv').config();
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => {
   logger.info('Connected to MongoDB');
-  server = app.listen(process.env.PORT || 3000, () => {
+  server = app.listen(process.env.PORT || 3000, process.env.HOST || '0.0.0.0', () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
