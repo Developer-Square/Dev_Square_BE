@@ -20,7 +20,7 @@ const envVarsSchema = Joi.object()
     ADMIN_NAME: Joi.string().required().default('admin').description('initial admin username'),
     ADMIN_PASSWORD: Joi.string().required().default('admin1234').description('initial admin password'),
     ADMIN_EMAIL: Joi.string().required().default('admin@example.com').description('initial admin email'),
-    ADMIN_ROLE: Joi.string().required().default('admin').description('admin role')
+    ADMIN_ROLE: Joi.string().required().default('admin').description('admin role'),
   })
   .unknown();
 
@@ -32,7 +32,7 @@ if (error) {
 
 module.exports = {
   env: envVars.NODE_ENV,
-  port: envVars.PORT,
+  port: envVars.PORT || 3000,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {
