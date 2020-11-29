@@ -5,16 +5,16 @@ const logger = require('./config/logger');
 const { userService } = require('./services');
 
 let server;
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(async() => {
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => {
   logger.info('Connected to MongoDB');
-  server = app.listen(config.port, () => {
+  server = app.listen(config.port || 3000, () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
-  if(config.env === 'development'){
-    setTimeout(async() => {
+  if (config.env === 'development') {
+    setTimeout(async () => {
       await userService.createAdmin();
-    }, 100)
+    }, 100);
   }
 });
 
