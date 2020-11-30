@@ -12,7 +12,7 @@ router
   .get(auth('getClient'), validate(clientValidation.queryClient), clientController.queryClient);
 
 router
-  .route('/:itemId')
+  .route('/:clientId')
   .get(auth('getClient'), validate(clientValidation.getClient), clientController.getClient)
   .patch(auth('manageClient'), validate(clientValidation.updateClient), clientController.updateClient)
   .delete(auth('manageClient'), validate(clientValidation.deleteClient), clientController.deleteClient);
@@ -90,17 +90,17 @@ module.exports = router;
  *            type: string
  *          description: name
  *        - in: query
- *          projectName: projectName
+ *          name: projectName
  *          schema:
  *            type: string
  *          description: projectName
  *        - in: query
- *          stack: stack
+ *          name: stack
  *          schema:
  *            type: string
  *          description: stack
  *        - in: query
- *          dueDate: dueDate
+ *          name: dueDate
  *          schema:
  *            type: string
  *          description: dueDate

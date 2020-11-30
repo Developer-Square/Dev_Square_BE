@@ -1,9 +1,9 @@
 const httpStatus = require('http-status');
+const prompt = require('prompt');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const logger = require('../config/logger');
-const prompt = require('prompt');
 const adminProperties = require('../config/admin');
 
 /**
@@ -25,31 +25,34 @@ const createUser = async (userBody) => {
  */
 const createAdmin = async () => {
   const admin = await User.findOne({ name: config.admin.name });
-  if(!admin){
+  if (!admin) {
     prompt.start();
-    prompt.message = 'Password'
+    prompt.message = 'Password';
 
     prompt.get(adminProperties, async function (err, result) {
-      if (err) { 
+      if (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
-        // return 1; 
+        // return 1;
       }
       await User.create({
         name: config.admin.name,
         password: result.password,
         email: config.admin.email,
-        role: config.admin.role
-      })
-      if(result.password === config.admin.password){
+        role: config.admin.role,
+      });
+      if (result.password === config.admin.password) {
         logger.info('Admin created with default configs. Use the email and password in your environment variables to login');
-      }else{
-        logger.info('Admin created with new password. Use the email in your environment variables and your new password to login');
+      } else {
+        logger.info(
+          'Admin created with new password. Use the email in your environment variables and your new password to login'
+        );
       }
     });
 
     // const user = await User.create(config.admin);
     // logger.info('Admin created...Use the default configs');
-  }else{
+  } else {
     logger.info('Admin exists....');
   }
 };
@@ -96,7 +99,7 @@ const getUserTasks = async (userId) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  return {tasks: user.tasks};
+  return { tasks: user.tasks };
 };
 
 /**
@@ -129,7 +132,8 @@ const updateUserTaskById = async (userId, taskId) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if(user.tasks.indexOf(taskId) != -1){
+  // eslint-disable-next-line eqeqeq
+  if (user.tasks.indexOf(taskId) != -1) {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is already assigned the task');
   }
   user.tasks.push(taskId);
@@ -177,5 +181,5 @@ module.exports = {
   updateUserTaskById,
   updateStatusById,
   getUserTasks,
-  createAdmin
+  createAdmin,
 };

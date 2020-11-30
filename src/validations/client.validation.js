@@ -13,7 +13,10 @@ const createClient = {
 
 const queryClient = {
   query: Joi.object().keys({
-    category: Joi.string(),
+    name: Joi.string(),
+    projectName: Joi.string(),
+    dueDate: Joi.date(),
+    stack: Joi.array(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
