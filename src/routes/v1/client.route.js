@@ -1,39 +1,39 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { portfolioValidation } = require('../../validations');
-const { portfolioController } = require('../../controllers');
+const { clientValidation } = require('../../validations');
+const { clientController } = require('../../controllers');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('managePortfolio'), validate(portfolioValidation.createItem), portfolioController.createItem)
-  .get(auth('getPortfolio'), validate(portfolioValidation.queryPortfolio), portfolioController.queryPortfolio);
+  .post(auth('manageClient'), validate(clientValidation.createItem), clientController.createClient)
+  .get(auth('getClient'), validate(clientValidation.queryClient), clientController.queryClient);
 
 router
   .route('/:itemId')
-  .get(auth('getPortfolio'), validate(portfolioValidation.getItem), portfolioController.getItem)
-  .patch(auth('managePortfolio'), validate(portfolioValidation.updateItem), portfolioController.updateItem)
-  .delete(auth('managePortfolio'), validate(portfolioValidation.deleteItem), portfolioController.deleteItem);
+  .get(auth('getClient'), validate(clientValidation.getClient), clientController.getClient)
+  .patch(auth('manageClient'), validate(clientValidation.updateClient), clientController.updateClient)
+  .delete(auth('manageClient'), validate(clientValidation.deleteClient), clientController.deleteClient);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Portfolio
- *   description: Portfolio item management and retrieval
+ *   name: Client
+ *   description: Client item management and retrieval
  */
 
 /**
  * @swagger
  * path:
- *  /portfolio:
+ *  /client:
  *    post:
- *      summary: Create a portfolio item
- *      description: Only admins can create portfolio items.
- *      tags: [Portfolio]
+ *      summary: Create a client item
+ *      description: Only admins can create client items.
+ *      tags: [Client]
  *      security:
  *        - bearerAuth: []
  *      requestBody:
@@ -43,52 +43,67 @@ module.exports = router;
  *            schema:
  *              type: object
  *              required:
- *                - title
- *                - category
+ *                - name
  *                - description
- *                - price
- *                - difficulty
+ *                - projectName
+ *                - dueDate
+ *                - stack
  *              properties:
- *                title:
- *                  type: string
- *                category:
+ *                name:
  *                  type: string
  *                description:
  *                  type: string
- *                link:
+ *                projectName:
  *                  type: string
- *                gallery:
+ *                dueDate:
+ *                  type: date
+ *                stack:
  *                  type: array
  *              example:
- *                title: E-commerce frontend
- *                category: E-commerce
- *                description: E-commerce frontend blah blah blah
- *                link: http://asampleportfolio.com
- *                gallery: [http://img1.com, http://img2.com]
+ *                name: RylaTech
+ *                description: Backend for mobile app
+ *                projectName: Node BE for Mobile app
+ *                dueDate: '2021-05-18T16:00:00Z'
+ *                stack: [node, mongoDB]
  *      responses:
  *        "201":
  *          description: Created
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Portfolio'
+ *                 $ref: '#/components/schemas/Client'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
  *          $ref: '#/components/responses/Forbidden'
  *
  *    get:
- *      summary: Get all Portfolio items
- *      description: All users can retrieve portfolio items.
- *      tags: [Portfolio]
+ *      summary: Get all Clients
+ *      description: Only admins can retrieve clients.
+ *      tags: [Client]
  *      security:
  *        - bearerAuth: []
  *      parameters:
  *        - in: query
- *          category: category
+ *          name: name
  *          schema:
  *            type: string
- *          description: Category
+ *          description: name
+ *        - in: query
+ *          projectName: projectName
+ *          schema:
+ *            type: string
+ *          description: projectName
+ *        - in: query
+ *          stack: stack
+ *          schema:
+ *            type: string
+ *          description: stack
+ *        - in: query
+ *          dueDate: dueDate
+ *          schema:
+ *            type: string
+ *          description: dueDate
  *        - in: query
  *          name: sortBy
  *          schema:
@@ -119,7 +134,7 @@ module.exports = router;
  *                  results:
  *                    type: array
  *                    items:
- *                      $ref: '#/components/schemas/Portfolio'
+ *                      $ref: '#/components/schemas/Client'
  *                  page:
  *                    type: integer
  *                    example: 1
@@ -141,11 +156,11 @@ module.exports = router;
 /**
  * @swagger
  * path:
- *  /portfolio/{id}:
+ *  /client/{id}:
  *    get:
- *      summary: Get a portfolio item
- *      description: All users can retrieve portfolio items.
- *      tags: [Portfolio]
+ *      summary: Get a client
+ *      description: Only admins and clients can retrieve clients.
+ *      tags: [Client]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -154,14 +169,14 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: Portfolio item id
+ *          description: Client id
  *      responses:
  *        "200":
  *          description: OK
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Portfolio'
+ *                 $ref: '#/components/schemas/Client'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
@@ -170,9 +185,9 @@ module.exports = router;
  *          $ref: '#/components/responses/NotFound'
  *
  *    patch:
- *      summary: Update a portfolio item
- *      description: Only admins can update portfolio items.
- *      tags: [Portfolio]
+ *      summary: Update a client
+ *      description: Only admins can update clients.
+ *      tags: [Client]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -181,7 +196,7 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: Portfolio item id
+ *          description: Client id
  *      requestBody:
  *        required: true
  *        content:
@@ -189,29 +204,29 @@ module.exports = router;
  *            schema:
  *              type: object
  *              properties:
- *                title:
- *                  type: string
- *                category:
+ *                name:
  *                  type: string
  *                description:
  *                  type: string
- *                link:
+ *                projectName:
  *                  type: string
- *                gallery:
+ *                dueDate:
+ *                  type: date
+ *                stack:
  *                  type: array
  *              example:
- *                title: E-commerce frontend
- *                category: E-commerce
- *                description: E-commerce frontend blah blah blah
- *                link: http://asampleportfolio.com
- *                gallery: [http://img1.com, http://img2.com]
+ *                name: RylaTech
+ *                description: Backend for mobile app
+ *                projectName: Node BE for Mobile app
+ *                dueDate: '2021-05-18T16:00:00Z'
+ *                stack: [node, mongoDB]
  *      responses:
  *        "200":
  *          description: OK
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Portfolio'
+ *                 $ref: '#/components/schemas/Client'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
@@ -220,9 +235,9 @@ module.exports = router;
  *          $ref: '#/components/responses/NotFound'
  *
  *    delete:
- *      summary: Delete a portfolio item
- *      description: Only admins can delete portfolio items.
- *      tags: [Portfolio]
+ *      summary: Delete a client
+ *      description: Only admins can delete clients.
+ *      tags: [Client]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -231,7 +246,7 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: Portfolio item id
+ *          description: client id
  *      responses:
  *        "200":
  *          description: No content
