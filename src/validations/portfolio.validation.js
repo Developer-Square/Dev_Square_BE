@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { password, objectId } = require('./custom.validation');
+const { objectId } = require('./custom.validation');
 
 const createItem = {
   body: Joi.object().keys({
@@ -32,11 +32,11 @@ const updateItem = {
   }),
   body: Joi.object()
     .keys({
-        title: Joi.string(),
-        category: Joi.string(),
-        description: Joi.string(),
-        link: Joi.string(),
-        gallery: Joi.array(),
+      title: Joi.string(),
+      category: Joi.string(),
+      description: Joi.string(),
+      link: Joi.string(),
+      gallery: Joi.array(),
     })
     .min(1),
 };

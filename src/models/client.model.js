@@ -23,8 +23,7 @@ const clientSchema = mongoose.Schema(
       required: true,
     },
     stack: {
-      type: String,
-      trim: true,
+      type: Array,
       required: true,
     },
   },
