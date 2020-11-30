@@ -37,17 +37,17 @@ const deleteUser = catchAsync(async (req, res) => {
 const addTaskToUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserTaskById(req.params.userId, req.body.taskId);
   res.send(user);
-})
+});
 
 const getUserTasks = catchAsync(async (req, res) => {
   const tasks = await userService.getUserTasks(req.params.userId);
   res.send(tasks);
-})
+});
 
 const changeUserStatus = catchAsync(async (req, res) => {
   const user = await userService.updateStatusById(req.params.userId, req.body.newStatus);
   res.send(user);
-})
+});
 
 module.exports = {
   createUser,
@@ -57,5 +57,5 @@ module.exports = {
   deleteUser,
   addTaskToUser,
   changeUserStatus,
-  getUserTasks
+  getUserTasks,
 };
