@@ -41,6 +41,7 @@ describe('Task routes', () => {
         description: newTask.description,
         price: newTask.price,
         difficulty: newTask.difficulty,
+        completed: false,
       });
 
       const dbTask = await Task.findById(res.body.id);
@@ -106,6 +107,7 @@ describe('Task routes', () => {
         description: taskOne.description,
         price: taskOne.price,
         difficulty: taskOne.difficulty,
+        completed: false,
       });
     });
 
@@ -146,6 +148,28 @@ describe('Task routes', () => {
       });
       expect(res.body.results).toHaveLength(2);
       expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
+    });
+
+    test('should correctly apply filter on completed field', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      const res = await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ completed: taskThree.completed })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(taskThree._id.toHexString());
     });
 
     test('should correctly apply filter on difficulty field', async () => {
@@ -283,6 +307,7 @@ describe('Task routes', () => {
         description: taskOne.description,
         price: taskOne.price,
         difficulty: taskOne.difficulty,
+        completed: false,
       });
     });
 
@@ -375,6 +400,7 @@ describe('Task routes', () => {
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
         difficulty: 'intermediate',
+        completed: true,
       };
 
       const res = await request(app)
@@ -390,6 +416,7 @@ describe('Task routes', () => {
         description: updateBody.description,
         price: updateBody.price,
         difficulty: updateBody.difficulty,
+        completed: updateBody.completed,
       });
 
       const dbTask = await Task.findById(taskOne._id);
@@ -400,6 +427,7 @@ describe('Task routes', () => {
         description: updateBody.description,
         price: updateBody.price,
         difficulty: updateBody.difficulty,
+        completed: updateBody.completed,
       });
     });
 

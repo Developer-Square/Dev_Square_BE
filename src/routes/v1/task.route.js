@@ -206,12 +206,15 @@ module.exports = router;
  *                difficulty:
  *                  type: string
  *                  enum: [beginner, intermediate, expert]
+ *                completed:
+ *                  type: boolean
  *              example:
  *                title: E-commerce frontend
  *                category: E-commerce
  *                description: E-commerce frontend blah blah blah
  *                price: 25000
  *                difficulty: beginner
+ *                completed: true
  *      responses:
  *        "200":
  *          description: OK

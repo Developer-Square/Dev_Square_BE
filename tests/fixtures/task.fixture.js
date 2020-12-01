@@ -27,6 +27,7 @@ const taskThree = {
   description: faker.lorem.paragraph(),
   price: faker.random.number(),
   difficulty: 'intermediate',
+  completed: true,
 };
 
 const insertTasks = async (tasks) => {
