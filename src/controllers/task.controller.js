@@ -10,18 +10,18 @@ const createTask = catchAsync(async (req, res) => {
 });
 
 const queryTasks = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['category', 'difficulty']);
+  const filter = pick(req.query, ['category', 'difficulty', 'completed']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await taskService.queryTask(filter, options);
   res.send(result);
 });
 
 const getTask = catchAsync(async (req, res) => {
-    const task = await taskService.getTaskById(req.params.taskId);
-    if (!task) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
-    }
-    res.send(task);
+  const task = await taskService.getTaskById(req.params.taskId);
+  if (!task) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  }
+  res.send(task);
 });
 
 const updateTask = catchAsync(async (req, res) => {
@@ -34,11 +34,10 @@ const deleteTask = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-
 module.exports = {
   createTask,
   queryTasks,
   getTask,
   updateTask,
-  deleteTask
+  deleteTask,
 };
