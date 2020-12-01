@@ -6,9 +6,9 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin', 'developer'),
+    role: Joi.string().required().valid('user', 'admin', 'client'),
     skills: Joi.array().required(),
-    status: Joi.string().valid('available','busy'),
+    status: Joi.string().valid('available', 'busy'),
     tasks: Joi.array(),
   }),
 };
@@ -39,7 +39,7 @@ const updateUser = {
       password: Joi.string().custom(password),
       name: Joi.string(),
       skills: Joi.array(),
-      status: Joi.string().valid('available','busy'),
+      status: Joi.string().valid('available', 'busy'),
       tasks: Joi.array(),
     })
     .min(1),
@@ -62,17 +62,17 @@ const assignTask = {
     userId: Joi.string().custom(objectId),
   }),
   body: Joi.object().keys({
-    taskId: Joi.string().required().custom(objectId)
-  })
-}
+    taskId: Joi.string().required().custom(objectId),
+  }),
+};
 
 const changeStatus = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),
   }),
   body: Joi.object().keys({
-    newStatus: Joi.string().required()
-  })
+    newStatus: Joi.string().required(),
+  }),
 };
 
 module.exports = {
@@ -83,5 +83,5 @@ module.exports = {
   deleteUser,
   assignTask,
   changeStatus,
-  getUserTasks
+  getUserTasks,
 };

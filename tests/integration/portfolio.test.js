@@ -1,10 +1,8 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const { User } = require('../../src/models');
 const { Portfolio } = require('../../src/models');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
@@ -22,7 +20,7 @@ describe('Portfolio routes', () => {
         category: 'react',
         description: faker.lorem.paragraph(),
         link: faker.internet.url(),
-        gallery: [faker.internet.url(), faker.internet.url()]
+        gallery: [faker.internet.url(), faker.internet.url()],
       };
     });
 
@@ -36,7 +34,14 @@ describe('Portfolio routes', () => {
         .send(newItem)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).toEqual({ id: expect.anything(), title: newItem.title, category: newItem.category, description: newItem.description, link: newItem.link, gallery: newItem.gallery });
+      expect(res.body).toEqual({
+        id: expect.anything(),
+        title: newItem.title,
+        category: newItem.category,
+        description: newItem.description,
+        link: newItem.link,
+        gallery: newItem.gallery,
+      });
 
       const dbItem = await Portfolio.findById(res.body.id);
       expect(dbItem).toBeDefined();
@@ -44,6 +49,7 @@ describe('Portfolio routes', () => {
       expect(dbItem.title).toBe(newItem.title);
       expect(dbItem.category).toBe(newItem.category);
       expect(dbItem.description).toBe(newItem.description);
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(dbItem.link).toBe(newItem.link);
     });
 
@@ -87,7 +93,7 @@ describe('Portfolio routes', () => {
         category: itemOne.category,
         description: itemOne.description,
         link: itemOne.link,
-        gallery: itemOne.gallery
+        gallery: itemOne.gallery,
       });
     });
 
@@ -241,7 +247,7 @@ describe('Portfolio routes', () => {
         category: itemOne.category,
         description: itemOne.description,
         link: itemOne.link,
-        gallery: itemOne.gallery
+        gallery: itemOne.gallery,
       });
     });
 
@@ -301,7 +307,7 @@ describe('Portfolio routes', () => {
 
     // admin trying to delete someone else's items
 
-    // User assigning someone else item 
+    // User assigning someone else item
 
     test('should return 400 error if itemId is not a valid mongo id', async () => {
       await insertUsers([admin]);
@@ -335,7 +341,7 @@ describe('Portfolio routes', () => {
         category: 'node',
         description: faker.lorem.paragraph(),
         link: faker.internet.url(),
-        gallery: [faker.internet.url(), faker.internet.url(), faker.internet.url()]
+        gallery: [faker.internet.url(), faker.internet.url(), faker.internet.url()],
       };
 
       const res = await request(app)
@@ -350,7 +356,7 @@ describe('Portfolio routes', () => {
         category: updateBody.category,
         description: updateBody.description,
         link: updateBody.link,
-        gallery: updateBody.gallery
+        gallery: updateBody.gallery,
       });
 
       const dbItem = await Portfolio.findById(itemOne._id);
@@ -359,6 +365,7 @@ describe('Portfolio routes', () => {
       expect(dbItem.title).toBe(updateBody.title);
       expect(dbItem.category).toBe(updateBody.category);
       expect(dbItem.description).toBe(updateBody.description);
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(dbItem.link).toBe(updateBody.link);
     });
 

@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const taskSchema = mongoose.Schema(
+const clientSchema = mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    category: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -18,14 +13,17 @@ const taskSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    price: {
-      type: Number,
+    projectName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    dueDate: {
+      type: Date,
       required: true,
     },
-    difficulty: {
-      type: String,
-      trim: true,
-      enum: ['beginner', 'intermediate', 'expert'],
+    stack: {
+      type: Array,
       required: true,
     },
   },
@@ -35,13 +33,12 @@ const taskSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-taskSchema.plugin(toJSON);
-taskSchema.plugin(paginate);
+clientSchema.plugin(toJSON);
+clientSchema.plugin(paginate);
 
 /**
- * @typedef Task
+ * @typedef Client
  */
-const Task = mongoose.model('Task', taskSchema);
+const Client = mongoose.model('Client', clientSchema);
 
-module.exports.taskSchema = taskSchema;
-module.exports.Task = Task;
+module.exports = Client;

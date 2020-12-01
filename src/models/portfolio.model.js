@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
-var multer = require('multer');
 
 const portfolioSchema = mongoose.Schema(
   {
@@ -29,7 +25,7 @@ const portfolioSchema = mongoose.Schema(
     },
     gallery: {
       type: Array,
-      trim: true
+      trim: true,
     },
   },
   {

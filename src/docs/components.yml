@@ -67,6 +67,26 @@ components:
         link: http://asampleproject.com
         gallery: [http://image1.com, http://image2.com]
 
+    Client:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        projectName:
+          type: string
+        dueDate:
+          type: date
+        stack:
+          type: array
+      example:
+        name: RylaTech
+        description: Backend for mobile app
+        projectName: Node BE for Mobile app
+        dueDate: '2021-05-18T16:00:00Z'
+        stack: [node, mongoDB]
+
     Token:
       type: object
       properties:
