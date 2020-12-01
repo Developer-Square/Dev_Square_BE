@@ -22,9 +22,7 @@ router
   .route('/status/:userId')
   .post(auth('manageUsers'), validate(userValidation.changeStatus), userController.changeUserStatus);
 
-router
-  .route('/tasks/:userId')
-  .get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks);
+router.route('/tasks/:userId').get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks);
 
 module.exports = router;
 
@@ -205,7 +203,7 @@ module.exports = router;
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
  *          $ref: '#/components/responses/Forbidden'
- * 
+ *
  *    get:
  *      summary: Get a user
  *      description: Logged in users can fetch only their own user information. Only admins can fetch other users.
@@ -308,7 +306,7 @@ module.exports = router;
  *          $ref: '#/components/responses/NotFound'
  */
 
- /**
+/**
  * @swagger
  * path:
  *  /users/status/{id}:
@@ -351,7 +349,7 @@ module.exports = router;
  *          $ref: '#/components/responses/Forbidden'
  */
 
-  /**
+/**
  * @swagger
  * path:
  *  /users/tasks/{id}:

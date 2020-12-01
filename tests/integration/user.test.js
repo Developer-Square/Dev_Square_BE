@@ -1,5 +1,4 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
@@ -20,9 +19,9 @@ describe('User routes', () => {
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
-        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
+        tasks: ['5fa7a5ed29246f1fecc06214', '5fa7a5ed29246f1fecc06213'],
         skills: ['JS', 'PHP', 'Django', 'C'],
-        status: 'available'
+        status: 'available',
       };
     });
 
@@ -36,7 +35,15 @@ describe('User routes', () => {
         .expect(httpStatus.CREATED);
 
       expect(res.body).not.toHaveProperty('password');
-      expect(res.body).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: newUser.role, tasks: newUser.tasks, skills: newUser.skills, status: newUser.status});
+      expect(res.body).toEqual({
+        id: expect.anything(),
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        tasks: newUser.tasks,
+        skills: newUser.skills,
+        status: newUser.status,
+      });
 
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
@@ -178,7 +185,7 @@ describe('User routes', () => {
         role: userOne.role,
         tasks: userOne.tasks,
         skills: userOne.skills,
-        status: userOne.status
+        status: userOne.status,
       });
     });
 
@@ -349,7 +356,7 @@ describe('User routes', () => {
         role: userOne.role,
         tasks: userOne.tasks,
         skills: userOne.skills,
-        status: userOne.status
+        status: userOne.status,
       });
     });
 
@@ -468,9 +475,9 @@ describe('User routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
-        tasks: ["5fa7a5ed29246f1fecc06214", "5fa7a5ed29246f1fecc06213"],
+        tasks: ['5fa7a5ed29246f1fecc06214', '5fa7a5ed29246f1fecc06213'],
         skills: ['Java', 'C#'],
-        status: 'busy'
+        status: 'busy',
       };
 
       const res = await request(app)
@@ -487,7 +494,7 @@ describe('User routes', () => {
         role: 'user',
         tasks: updateBody.tasks,
         skills: updateBody.skills,
-        status: updateBody.status
+        status: updateBody.status,
       });
 
       const dbUser = await User.findById(userOne._id);
@@ -629,8 +636,8 @@ describe('User routes', () => {
     test('should return 200 and successfully update user status if data is ok', async () => {
       await insertUsers([admin]);
       const updateBody = {
-        newStatus: 'busy'
-      }
+        newStatus: 'busy',
+      };
 
       const res = await request(app)
         .post(`/v1/users/status/${admin._id}`)
@@ -646,7 +653,7 @@ describe('User routes', () => {
         role: 'admin',
         tasks: admin.tasks,
         skills: admin.skills,
-        status: updateBody.newStatus
+        status: updateBody.newStatus,
       });
 
       const dbUser = await User.findById(admin._id);
@@ -732,8 +739,8 @@ describe('User routes', () => {
     test('should return 200 and successfully update user tasks if data is ok', async () => {
       await insertUsers([admin, userOne]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
-      }
+        taskId: '5ebac534954b54139806c112',
+      };
 
       const res = await request(app)
         .post(`/v1/users/${userOne._id}`)
@@ -749,7 +756,7 @@ describe('User routes', () => {
         role: 'user',
         tasks: [...userOne.tasks, updateBody.taskId],
         skills: userOne.skills,
-        status: userOne.status
+        status: userOne.status,
       });
 
       const dbUser = await User.findById(userOne._id);
@@ -760,7 +767,7 @@ describe('User routes', () => {
     test('should return 406 if user is already assigned task', async () => {
       await insertUsers([userOne]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c113'
+        taskId: '5ebac534954b54139806c113',
       };
 
       await request(app)
@@ -773,7 +780,7 @@ describe('User routes', () => {
     test('should return 401 error if access token is missing', async () => {
       await insertUsers([userOne]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app).post(`/v1/users/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
@@ -782,7 +789,7 @@ describe('User routes', () => {
     test('should return 200 if user is updating their tasks', async () => {
       await insertUsers([userOne]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app)
@@ -795,7 +802,7 @@ describe('User routes', () => {
     test('should return 403 if user is updating the tasks of another user', async () => {
       await insertUsers([userOne, userTwo]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app)
@@ -808,7 +815,7 @@ describe('User routes', () => {
     test('should return 200 and successfully update user if admin is updating another user tasks', async () => {
       await insertUsers([userOne, admin]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app)
@@ -821,7 +828,7 @@ describe('User routes', () => {
     test('should return 404 if admin is updating another user tasks and user is not found', async () => {
       await insertUsers([admin]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app)
@@ -834,7 +841,7 @@ describe('User routes', () => {
     test('should return 400 error if userId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       const updateBody = {
-        taskId: '5ebac534954b54139806c112'
+        taskId: '5ebac534954b54139806c112',
       };
 
       await request(app)
@@ -847,7 +854,7 @@ describe('User routes', () => {
     test('should return 400 error if taskId is not a valid mongo id', async () => {
       await insertUsers([admin, userOne]);
       const updateBody = {
-        taskId: 'invalid'
+        taskId: 'invalid',
       };
 
       await request(app)
@@ -919,6 +926,7 @@ describe('User routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
+    // eslint-disable-next-line jest/no-commented-out-tests
     // test('should return 404 error if user is not assigned any tasks', async () => {
     //   await insertUsers([admin, userTwo]);
 

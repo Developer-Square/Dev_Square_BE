@@ -16,20 +16,12 @@ const queryPortfolio = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-const getPortfolio = catchAsync(async (req, res) => {
-  const items = await portfolioService.getPortfolio();
-  if (!items) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Items not found');
-  }
-  res.send(items);
-});
-
 const getItem = catchAsync(async (req, res) => {
-    const item = await portfolioService.getItemById(req.params.itemId);
-    if (!item) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Item not found');
-    }
-    res.send(item);
+  const item = await portfolioService.getItemById(req.params.itemId);
+  if (!item) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Item not found');
+  }
+  res.send(item);
 });
 
 const updateItem = catchAsync(async (req, res) => {
@@ -42,11 +34,9 @@ const deleteItem = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-
 module.exports = {
   createItem,
   queryPortfolio,
-  getPortfolio,
   getItem,
   updateItem,
   deleteItem,

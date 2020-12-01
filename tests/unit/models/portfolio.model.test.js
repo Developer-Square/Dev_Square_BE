@@ -10,7 +10,7 @@ describe('Portfolio model', () => {
         category: faker.lorem.word(),
         description: faker.lorem.paragraph(),
         link: faker.internet.url(),
-        gallery: [faker.internet.url(), faker.internet.url()]
+        gallery: [faker.internet.url(), faker.internet.url()],
       };
     });
 

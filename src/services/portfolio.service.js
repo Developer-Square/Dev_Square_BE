@@ -27,21 +27,13 @@ const queryItem = async (filter, options) => {
 };
 
 /**
- * Get all items
- * @returns {Promise<Portfolio>}
- */
-const getPortfolio = async () => {
-  return Portfolio.find({});
-};
-
-/**
  * Get item by id
  * @param {ObjectId} id
  * @returns {Promise<Item>}
  */
 const getItemById = async (id) => {
-    return Portfolio.findById(id);
-  };
+  return Portfolio.findById(id);
+};
 
 /**
  * Update item by id
@@ -79,5 +71,4 @@ module.exports = {
   getItemById,
   updateItemById,
   deleteItemById,
-  getPortfolio
 };
