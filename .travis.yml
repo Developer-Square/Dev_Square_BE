@@ -4,6 +4,8 @@ node_js:
 services:
   - mongodb
 cache: yarn
+  directories:
+    - "node_modules"
 branches:
   only:
     - master
