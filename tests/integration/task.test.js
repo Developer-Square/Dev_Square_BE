@@ -1,5 +1,4 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
@@ -21,7 +20,7 @@ describe('Task routes', () => {
         category: 'node',
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
-        difficulty: 'beginner'
+        difficulty: 'beginner',
       };
     });
 
@@ -35,11 +34,24 @@ describe('Task routes', () => {
         .send(newTask)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).toEqual({ id: expect.anything(), title: newTask.title, category: newTask.category, description: newTask.description, price: newTask.price, difficulty: newTask.difficulty });
+      expect(res.body).toEqual({
+        id: expect.anything(),
+        title: newTask.title,
+        category: newTask.category,
+        description: newTask.description,
+        price: newTask.price,
+        difficulty: newTask.difficulty,
+      });
 
       const dbTask = await Task.findById(res.body.id);
       expect(dbTask).toBeDefined();
-      expect(dbTask).toMatchObject({ title: newTask.title, category: newTask.category, description: newTask.description, price: newTask.price, difficulty: newTask.difficulty });
+      expect(dbTask).toMatchObject({
+        title: newTask.title,
+        category: newTask.category,
+        description: newTask.description,
+        price: newTask.price,
+        difficulty: newTask.difficulty,
+      });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -93,7 +105,7 @@ describe('Task routes', () => {
         category: taskOne.category,
         description: taskOne.description,
         price: taskOne.price,
-        difficulty: taskOne.difficulty
+        difficulty: taskOne.difficulty,
       });
     });
 
@@ -270,7 +282,7 @@ describe('Task routes', () => {
         category: taskOne.category,
         description: taskOne.description,
         price: taskOne.price,
-        difficulty: taskOne.difficulty
+        difficulty: taskOne.difficulty,
       });
     });
 
@@ -328,7 +340,7 @@ describe('Task routes', () => {
 
     // admin trying to delete someone else's tasks
 
-    // User assigning someone else task 
+    // User assigning someone else task
 
     test('should return 400 error if taskId is not a valid mongo id', async () => {
       await insertUsers([admin]);
@@ -362,7 +374,7 @@ describe('Task routes', () => {
         category: 'node',
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
       };
 
       const res = await request(app)
@@ -377,12 +389,18 @@ describe('Task routes', () => {
         category: updateBody.category,
         description: updateBody.description,
         price: updateBody.price,
-        difficulty: updateBody.difficulty
+        difficulty: updateBody.difficulty,
       });
 
       const dbTask = await Task.findById(taskOne._id);
       expect(dbTask).toBeDefined();
-      expect(dbTask).toMatchObject({ title: updateBody.title, category: updateBody.category, description: updateBody.description, price: updateBody.price, difficulty: updateBody.difficulty });
+      expect(dbTask).toMatchObject({
+        title: updateBody.title,
+        category: updateBody.category,
+        description: updateBody.description,
+        price: updateBody.price,
+        difficulty: updateBody.difficulty,
+      });
     });
 
     test('should return 401 error if access token is missing', async () => {
