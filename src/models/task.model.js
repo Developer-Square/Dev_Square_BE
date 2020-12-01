@@ -28,6 +28,10 @@ const taskSchema = mongoose.Schema(
       enum: ['beginner', 'intermediate', 'expert'],
       required: true,
     },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

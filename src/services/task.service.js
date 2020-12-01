@@ -40,7 +40,7 @@ const getTasks = async () => {
  * @returns {Promise<Task>}
  */
 const getTaskById = async (id) => {
-    return Task.findById(id);
+  return Task.findById(id);
 };
 
 /**
@@ -79,5 +79,5 @@ module.exports = {
   getTaskById,
   getTasks,
   updateTaskById,
-  deleteTaskById
+  deleteTaskById,
 };

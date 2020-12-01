@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { password, objectId } = require('./custom.validation');
+const { objectId } = require('./custom.validation');
 
 const createTask = {
   body: Joi.object().keys({
@@ -8,6 +8,7 @@ const createTask = {
     description: Joi.string().required(),
     price: Joi.number().integer().required(),
     difficulty: Joi.string().required().valid('beginner', 'intermediate', 'expert'),
+    completed: Joi.boolean(),
   }),
 };
 
@@ -15,6 +16,7 @@ const queryTasks = {
   query: Joi.object().keys({
     category: Joi.string(),
     difficulty: Joi.string(),
+    completed: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -33,11 +35,12 @@ const updateTask = {
   }),
   body: Joi.object()
     .keys({
-        title: Joi.string(),
-        category: Joi.string(),
-        description: Joi.string(),
-        price: Joi.number().integer(),
-        difficulty: Joi.string().valid('beginner', 'intermediate', 'expert'),
+      title: Joi.string(),
+      category: Joi.string(),
+      description: Joi.string(),
+      price: Joi.number().integer(),
+      difficulty: Joi.string().valid('beginner', 'intermediate', 'expert'),
+      completed: Joi.boolean(),
     })
     .min(1),
 };
