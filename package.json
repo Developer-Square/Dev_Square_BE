@@ -66,7 +66,7 @@
     "nodemailer": "^6.4.16",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "pm2": "^4.1.2",
+    "pm2": "^4.5.0",
     "prompt": "^1.0.0",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4",
