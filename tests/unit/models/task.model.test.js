@@ -10,7 +10,7 @@ describe('Task model', () => {
         category: faker.lorem.word(),
         description: faker.lorem.paragraph(),
         price: faker.random.number(),
-        difficulty: 'beginner'
+        difficulty: 'beginner',
       };
     });
 
