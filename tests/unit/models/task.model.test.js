@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const faker = require('faker');
 const { Task } = require('../../../src/models');
 
@@ -6,11 +7,12 @@ describe('Task model', () => {
     let newTask;
     beforeEach(() => {
       newTask = {
-        title: faker.lorem.sentence(5),
-        category: faker.lorem.word(),
+        stack: 'node',
+        creator: mongoose.Types.ObjectId(),
         description: faker.lorem.paragraph(),
-        price: faker.random.number(),
-        difficulty: 'beginner',
+        dueDate: faker.date.future(2),
+        difficulty: 'medium',
+        status: 'inProgress',
       };
     });
 

@@ -43,29 +43,34 @@ module.exports = router;
  *            schema:
  *              type: object
  *              required:
- *                - title
- *                - category
+ *                - stack
+ *                - creator
  *                - description
- *                - price
+ *                - dueDate
  *                - difficulty
+ *                - status
  *              properties:
- *                title:
+ *                stack:
  *                  type: string
- *                category:
+ *                creator:
  *                  type: string
  *                description:
  *                  type: string
- *                price:
- *                  type: number
+ *                dueDate:
+ *                  type: date
  *                difficulty:
  *                  type: string
- *                  enum: [beginner, intermediate, expert]
+ *                  enum: [easy, medium, hard]
+ *                status:
+ *                  type: string
+ *                  enum: [notStarted, inProgress, onHold, cancelled, completed]
  *              example:
- *                title: E-commerce frontend
- *                category: E-commerce
+ *                stack: Node
+ *                creator: 5ebac534954b54139806c112
  *                description: E-commerce frontend blah blah blah
- *                price: 25000
- *                difficulty: beginner
+ *                dueDate: '2021-05-18T16:00:00Z'
+ *                difficulty: medium
+ *                status: inProgress
  *      responses:
  *        "201":
  *          description: Created
@@ -86,27 +91,37 @@ module.exports = router;
  *        - bearerAuth: []
  *      parameters:
  *        - in: query
- *          category: category
+ *          name: stack
  *          schema:
  *            type: string
- *          description: Category
+ *          description: Task Stack
  *        - in: query
- *          difficulty: difficulty
+ *          name: creator
  *          schema:
  *            type: string
- *          description: Difficulty
+ *          description: The developer who created the task
+ *        - in: query
+ *          name: difficulty
+ *          schema:
+ *            type: string
+ *          description: The difficulty of the task
+ *        - in: query
+ *          name: status
+ *          schema:
+ *            type: string
+ *          description: Task status
  *        - in: query
  *          name: sortBy
  *          schema:
  *            type: string
- *          description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *          description: sort by query in the form of field:desc/asc (ex. creator:asc)
  *        - in: query
  *          name: limit
  *          schema:
  *            type: integer
  *            minimum: 1
  *          default: 10
- *          description: Maximum number of users
+ *          description: Maximum number of tasks
  *        - in: query
  *          name: page
  *          schema:
@@ -195,26 +210,27 @@ module.exports = router;
  *            schema:
  *              type: object
  *              properties:
- *                title:
+ *                stack:
  *                  type: string
- *                category:
+ *                creator:
  *                  type: string
  *                description:
  *                  type: string
- *                price:
- *                  type: number
+ *                dueDate:
+ *                  type: date
  *                difficulty:
  *                  type: string
- *                  enum: [beginner, intermediate, expert]
- *                completed:
- *                  type: boolean
+ *                  enum: [easy, medium, hard]
+ *                status:
+ *                  type: string
+ *                  enum: [notStarted, inProgress, onHold, cancelled, completed]
  *              example:
- *                title: E-commerce frontend
- *                category: E-commerce
+ *                stack: Node
+ *                creator: 5ebac534954b54139806c112
  *                description: E-commerce frontend blah blah blah
- *                price: 25000
- *                difficulty: beginner
- *                completed: true
+ *                dueDate: '2021-05-18T16:00:00Z'
+ *                difficulty: medium
+ *                status: inProgress
  *      responses:
  *        "200":
  *          description: OK

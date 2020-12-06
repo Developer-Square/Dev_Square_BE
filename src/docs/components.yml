@@ -29,23 +29,27 @@ components:
     Task:
       type: object
       properties:
-        title:
+        stack:
           type: string
-        category:
+        creator:
           type: string
         description:
           type: string
-        price:
-          type: number
+        dueDate:
+          type: date
         difficulty:
           type: string
-          enum: [beginner, intermediate, expert]
+          enum: [easy, medium, hard]
+        status:
+          type: string
+          enum: [notStarted, inProgress, onHold, cancelled, completed]
       example:
-        title: Node Backend
-        category: JavaScript
+        stack: Node
+        creator: 5ebac534954b54139806c112
         description: A node backend for a taxi hailing company blah blah blah
-        price: 50000
-        difficulty: intermediate
+        dueDate: '2021-05-18T16:00:00Z'
+        difficulty: medium
+        status: inProgress
 
     Portfolio:
       type: object

@@ -3,20 +3,21 @@ const { objectId } = require('./custom.validation');
 
 const createTask = {
   body: Joi.object().keys({
-    title: Joi.string().required(),
-    category: Joi.string().required(),
+    stack: Joi.string().required(),
+    creator: Joi.string().required().custom(objectId),
     description: Joi.string().required(),
-    price: Joi.number().integer().required(),
-    difficulty: Joi.string().required().valid('beginner', 'intermediate', 'expert'),
-    completed: Joi.boolean(),
+    dueDate: Joi.date().required(),
+    difficulty: Joi.string().required().valid('easy', 'medium', 'hard'),
+    status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
   }),
 };
 
 const queryTasks = {
   query: Joi.object().keys({
-    category: Joi.string(),
-    difficulty: Joi.string(),
-    completed: Joi.boolean(),
+    stack: Joi.string(),
+    creator: Joi.string().custom(objectId),
+    difficulty: Joi.string().valid('easy', 'medium', 'hard'),
+    status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -35,12 +36,12 @@ const updateTask = {
   }),
   body: Joi.object()
     .keys({
-      title: Joi.string(),
-      category: Joi.string(),
+      stack: Joi.string(),
+      creator: Joi.string().custom(objectId),
       description: Joi.string(),
-      price: Joi.number().integer(),
-      difficulty: Joi.string().valid('beginner', 'intermediate', 'expert'),
-      completed: Joi.boolean(),
+      dueDate: Joi.date(),
+      difficulty: Joi.string().valid('easy', 'medium', 'hard'),
+      status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
     })
     .min(1),
 };
