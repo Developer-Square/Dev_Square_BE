@@ -67,25 +67,44 @@ components:
         link: http://asampleproject.com
         gallery: [http://image1.com, http://image2.com]
 
-    Client:
+    Project:
       type: object
       properties:
+        clientId:
+          type: string
         name:
           type: string
         description:
           type: string
-        projectName:
-          type: string
         dueDate:
           type: date
         stack:
+          type: string
+        tasks:
           type: array
       example:
-        name: RylaTech
+        clientId: 5ebac534954b54139806c112
+        name: Backend for mobile app
         description: Backend for mobile app
-        projectName: Node BE for Mobile app
         dueDate: '2021-05-18T16:00:00Z'
-        stack: [node, mongoDB]
+        stack: node, mongoDB
+        tasks: [5ebac534954b54139806c113, 5ebac534954b54139806c114]
+
+    ProjectTasks:
+      type: array
+      $ref: '#/components/schemas/Task'
+      example:
+        [
+          {
+            "status": "inProgress",
+            "stack": "Node",
+            "creator": "5ebac534954b54139806c112",
+            "description": "E-commerce frontend blah blah blah",
+            "dueDate": "2021-05-18T16:00:00.000Z",
+            "difficulty": "medium",
+            "id": "5fcc8f089efb3c1e586f5d3f"
+          }
+        ]
 
     Token:
       type: object

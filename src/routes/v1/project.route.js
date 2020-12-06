@@ -1,39 +1,43 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { clientValidation } = require('../../validations');
-const { clientController } = require('../../controllers');
+const { projectValidation } = require('../../validations');
+const { projectController } = require('../../controllers');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageClient'), validate(clientValidation.createItem), clientController.createClient)
-  .get(auth('getClient'), validate(clientValidation.queryClient), clientController.queryClient);
+  .post(auth('manageProjects'), validate(projectValidation.createProject), projectController.createProject)
+  .get(auth('getProjects'), validate(projectValidation.queryProject), projectController.queryProject);
 
 router
-  .route('/:clientId')
-  .get(auth('getClient'), validate(clientValidation.getClient), clientController.getClient)
-  .patch(auth('manageClient'), validate(clientValidation.updateClient), clientController.updateClient)
-  .delete(auth('manageClient'), validate(clientValidation.deleteClient), clientController.deleteClient);
+  .route('/:projectId')
+  .get(auth('getProjects'), validate(projectValidation.getProject), projectController.getProject)
+  .patch(auth('manageProjects'), validate(projectValidation.updateProject), projectController.updateProject)
+  .delete(auth('manageProjects'), validate(projectValidation.deleteProject), projectController.deleteProject);
+
+router
+  .route('/tasks/:projectId')
+  .get(auth('getProjects'), validate(projectValidation.getTaskData), projectController.getTaskData);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Client
- *   description: Client item management and retrieval
+ *   name: Project
+ *   description: Project item management and retrieval
  */
 
 /**
  * @swagger
  * path:
- *  /client:
+ *  /project:
  *    post:
- *      summary: Create a client item
- *      description: Only admins can create client items.
- *      tags: [Client]
+ *      summary: Create a project item
+ *      description: Only admins can create project items.
+ *      tags: [Project]
  *      security:
  *        - bearerAuth: []
  *      requestBody:
@@ -43,44 +47,47 @@ module.exports = router;
  *            schema:
  *              type: object
  *              required:
+ *                - clientId
  *                - name
  *                - description
- *                - projectName
  *                - dueDate
  *                - stack
  *              properties:
+ *                clientId:
+ *                  type: string
  *                name:
  *                  type: string
  *                description:
  *                  type: string
- *                projectName:
- *                  type: string
  *                dueDate:
  *                  type: date
  *                stack:
+ *                  type: string
+ *                tasks:
  *                  type: array
  *              example:
- *                name: RylaTech
+ *                clientId: 5ebac534954b54139806c112
+ *                name: Backend for mobile app
  *                description: Backend for mobile app
- *                projectName: Node BE for Mobile app
  *                dueDate: '2021-05-18T16:00:00Z'
- *                stack: [node, mongoDB]
+ *                stack: node, mongoDB
+ *                tasks: [5ebac534954b54139806c113, 5ebac534954b54139806c114]
  *      responses:
  *        "201":
  *          description: Created
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Client'
+ *                 $ref: '#/components/schemas/Project'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
  *          $ref: '#/components/responses/Forbidden'
  *
  *    get:
- *      summary: Get all Clients
- *      description: Only admins can retrieve clients.
- *      tags: [Client]
+ *      summary: Get all Projects
+ *      description: Only admins can retrieve projects.
+ *      tags: [Project]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -88,22 +95,17 @@ module.exports = router;
  *          name: name
  *          schema:
  *            type: string
- *          description: name
+ *          description: Project name
  *        - in: query
- *          name: projectName
+ *          name: clientId
  *          schema:
  *            type: string
- *          description: projectName
+ *          description: Client's Id
  *        - in: query
  *          name: stack
  *          schema:
  *            type: string
  *          description: stack
- *        - in: query
- *          name: dueDate
- *          schema:
- *            type: string
- *          description: dueDate
  *        - in: query
  *          name: sortBy
  *          schema:
@@ -115,7 +117,7 @@ module.exports = router;
  *            type: integer
  *            minimum: 1
  *          default: 10
- *          description: Maximum number of items
+ *          description: Maximum number of projects
  *        - in: query
  *          name: page
  *          schema:
@@ -134,7 +136,7 @@ module.exports = router;
  *                  results:
  *                    type: array
  *                    items:
- *                      $ref: '#/components/schemas/Client'
+ *                      $ref: '#/components/schemas/Project'
  *                  page:
  *                    type: integer
  *                    example: 1
@@ -156,11 +158,11 @@ module.exports = router;
 /**
  * @swagger
  * path:
- *  /client/{id}:
+ *  /project/{id}:
  *    get:
- *      summary: Get a client
- *      description: Only admins and clients can retrieve clients.
- *      tags: [Client]
+ *      summary: Get a project
+ *      description: Only admins and clients can retrieve projects.
+ *      tags: [Project]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -169,14 +171,14 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: Client id
+ *          description: Project id
  *      responses:
  *        "200":
  *          description: OK
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Client'
+ *                 $ref: '#/components/schemas/Project'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
@@ -185,9 +187,9 @@ module.exports = router;
  *          $ref: '#/components/responses/NotFound'
  *
  *    patch:
- *      summary: Update a client
- *      description: Only admins can update clients.
- *      tags: [Client]
+ *      summary: Update a project
+ *      description: Only admins can update projects.
+ *      tags: [Project]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -196,7 +198,7 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: Client id
+ *          description: Project id
  *      requestBody:
  *        required: true
  *        content:
@@ -204,29 +206,32 @@ module.exports = router;
  *            schema:
  *              type: object
  *              properties:
+ *                clientId:
+ *                  type: string
  *                name:
  *                  type: string
  *                description:
  *                  type: string
- *                projectName:
- *                  type: string
  *                dueDate:
  *                  type: date
  *                stack:
+ *                  type: string
+ *                tasks:
  *                  type: array
  *              example:
- *                name: RylaTech
+ *                clientId: 5ebac534954b54139806c112
+ *                name: Backend for mobile app
  *                description: Backend for mobile app
- *                projectName: Node BE for Mobile app
  *                dueDate: '2021-05-18T16:00:00Z'
- *                stack: [node, mongoDB]
+ *                stack: node, mongoDB
+ *                tasks: [5ebac534954b54139806c113, 5ebac534954b54139806c114]
  *      responses:
  *        "200":
  *          description: OK
  *          content:
  *            application/json:
  *              schema:
- *                 $ref: '#/components/schemas/Client'
+ *                 $ref: '#/components/schemas/Project'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
@@ -235,9 +240,9 @@ module.exports = router;
  *          $ref: '#/components/responses/NotFound'
  *
  *    delete:
- *      summary: Delete a client
- *      description: Only admins can delete clients.
- *      tags: [Client]
+ *      summary: Delete a project
+ *      description: Only admins can delete projects.
+ *      tags: [Project]
  *      security:
  *        - bearerAuth: []
  *      parameters:
@@ -246,10 +251,42 @@ module.exports = router;
  *          required: true
  *          schema:
  *            type: string
- *          description: client id
+ *          description: Project id
  *      responses:
  *        "200":
  *          description: No content
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
+ *        "404":
+ *          $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * path:
+ *  /project/tasks/{id}:
+ *    get:
+ *      summary: Get a project's tasks
+ *      description: Only admins and clients can retrieve project tasks.
+ *      tags: [Project]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: Project id
+ *      responses:
+ *        "200":
+ *          description: OK
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 $ref: '#/components/schemas/ProjectTasks'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
