@@ -9,10 +9,10 @@ roleRights.set(roles[1], [
   'manageTasks',
   'getPortfolio',
   'managePortfolio',
-  'getClient',
-  'manageClient',
+  'getProjects',
+  'manageProjects',
 ]);
-roleRights.set(roles[2], ['getClient']);
+roleRights.set(roles[2], ['getProjects']);
 
 module.exports = {
   roles,
