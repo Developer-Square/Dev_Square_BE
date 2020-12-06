@@ -10,7 +10,7 @@ const createTask = catchAsync(async (req, res) => {
 });
 
 const queryTasks = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['category', 'difficulty', 'completed']);
+  const filter = pick(req.query, ['stack', 'difficulty', 'status', 'creator']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await taskService.queryTask(filter, options);
   res.send(result);

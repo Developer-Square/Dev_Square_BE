@@ -4,30 +4,30 @@ const { Task } = require('../../src/models');
 
 const taskOne = {
   _id: mongoose.Types.ObjectId(),
-  title: faker.lorem.sentence(5),
-  category: 'node',
+  stack: 'node',
+  creator: mongoose.Types.ObjectId(),
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'beginner',
+  dueDate: faker.date.future(2),
+  difficulty: 'medium',
 };
 
 const taskTwo = {
   _id: mongoose.Types.ObjectId(),
-  title: faker.lorem.sentence(5),
-  category: 'node',
+  stack: 'node',
+  creator: '5fc4aa77fbb5c260556866c6',
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'intermediate',
+  dueDate: faker.date.future(2),
+  difficulty: 'easy',
 };
 
 const taskThree = {
   _id: mongoose.Types.ObjectId(),
-  title: faker.lorem.sentence(5),
-  category: 'react',
+  stack: 'react',
+  creator: '5fc4aa77fbb5c260556866c6',
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'intermediate',
-  completed: true,
+  dueDate: faker.date.future(2),
+  difficulty: 'easy',
+  status: 'inProgress',
 };
 
 const insertTasks = async (tasks) => {

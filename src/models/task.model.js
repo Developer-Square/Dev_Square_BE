@@ -3,34 +3,36 @@ const { toJSON, paginate } = require('./plugins');
 
 const taskSchema = mongoose.Schema(
   {
-    title: {
+    stack: {
       type: String,
-      required: true,
       trim: true,
-    },
-    category: {
-      type: String,
       required: true,
-      trim: true,
     },
     description: {
       type: String,
       required: true,
       trim: true,
     },
-    price: {
-      type: Number,
+    creator: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    dueDate: {
+      type: Date,
       required: true,
     },
     difficulty: {
       type: String,
       trim: true,
-      enum: ['beginner', 'intermediate', 'expert'],
+      enum: ['easy', 'medium', 'hard'],
       required: true,
     },
-    completed: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      trim: true,
+      default: 'notStarted',
+      enum: ['notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'],
     },
   },
   {

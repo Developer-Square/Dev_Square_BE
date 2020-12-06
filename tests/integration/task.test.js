@@ -1,6 +1,7 @@
 const request = require('supertest');
 const faker = require('faker');
 const httpStatus = require('http-status');
+const mongoose = require('mongoose');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { Task } = require('../../src/models');
@@ -16,11 +17,11 @@ describe('Task routes', () => {
 
     beforeEach(() => {
       newTask = {
-        title: faker.lorem.sentence(5),
-        category: 'node',
+        stack: 'node',
+        creator: mongoose.Types.ObjectId(),
         description: faker.lorem.paragraph(),
-        price: faker.random.number(),
-        difficulty: 'beginner',
+        dueDate: faker.date.future(2),
+        difficulty: 'medium',
       };
     });
 
@@ -34,25 +35,12 @@ describe('Task routes', () => {
         .send(newTask)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).toEqual({
-        id: expect.anything(),
-        title: newTask.title,
-        category: newTask.category,
-        description: newTask.description,
-        price: newTask.price,
-        difficulty: newTask.difficulty,
-        completed: false,
-      });
+      expect(res.body.stack).toBe(newTask.stack);
 
       const dbTask = await Task.findById(res.body.id);
       expect(dbTask).toBeDefined();
-      expect(dbTask).toMatchObject({
-        title: newTask.title,
-        category: newTask.category,
-        description: newTask.description,
-        price: newTask.price,
-        difficulty: newTask.difficulty,
-      });
+      expect(dbTask.stack).toBe(newTask.stack);
+      expect(dbTask.status).toBe('notStarted');
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -72,6 +60,17 @@ describe('Task routes', () => {
     test('should return 400 error if difficulty is unknown', async () => {
       await insertUsers([admin]);
       newTask.difficulty = 'invalid';
+
+      await request(app)
+        .post('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newTask)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is unknown', async () => {
+      await insertUsers([admin]);
+      newTask.status = 'invalid';
 
       await request(app)
         .post('/v1/tasks')
@@ -100,15 +99,9 @@ describe('Task routes', () => {
         totalResults: 3,
       });
       expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0]).toEqual({
-        id: taskOne._id.toHexString(),
-        title: taskOne.title,
-        category: taskOne.category,
-        description: taskOne.description,
-        price: taskOne.price,
-        difficulty: taskOne.difficulty,
-        completed: false,
-      });
+      expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
+      expect(res.body.results[0].stack).toBe(taskOne.stack);
+      expect(res.body.results[0].status).toBe('notStarted');
     });
 
     test('should return 401 if access token is missing', async () => {
@@ -128,14 +121,14 @@ describe('Task routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should correctly apply filter on category field', async () => {
+    test('should correctly apply filter on stack field', async () => {
       await insertUsers([admin]);
       await insertTasks([taskOne, taskTwo, taskThree]);
 
       const res = await request(app)
         .get('/v1/tasks')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ category: taskOne.category })
+        .query({ stack: taskOne.stack })
         .send()
         .expect(httpStatus.OK);
 
@@ -150,14 +143,14 @@ describe('Task routes', () => {
       expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
     });
 
-    test('should correctly apply filter on completed field', async () => {
+    test('should correctly apply filter on status field', async () => {
       await insertUsers([admin]);
       await insertTasks([taskOne, taskTwo, taskThree]);
 
       const res = await request(app)
         .get('/v1/tasks')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ completed: taskThree.completed })
+        .query({ status: taskThree.status })
         .send()
         .expect(httpStatus.OK);
 
@@ -180,6 +173,29 @@ describe('Task routes', () => {
         .get('/v1/tasks')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ difficulty: taskTwo.difficulty })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0].id).toBe(taskTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(taskThree._id.toHexString());
+    });
+
+    test('should correctly apply filter on creator field', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      const res = await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ creator: taskTwo.creator })
         .send()
         .expect(httpStatus.OK);
 
@@ -287,6 +303,42 @@ describe('Task routes', () => {
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(taskThree._id.toHexString());
     });
+
+    test('should return 400 error if creator is not a valid mongo id', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ creator: 'invalidCreator' })
+        .send()
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if difficulty is unknown', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ difficulty: 'invalidDifficulty' })
+        .send()
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is unknown', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ status: 'invalidStatus' })
+        .send()
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
 
   describe('GET /v1/tasks/:taskId', () => {
@@ -300,15 +352,9 @@ describe('Task routes', () => {
         .send()
         .expect(httpStatus.OK);
 
-      expect(res.body).toEqual({
-        id: taskOne._id.toHexString(),
-        title: taskOne.title,
-        category: taskOne.category,
-        description: taskOne.description,
-        price: taskOne.price,
-        difficulty: taskOne.difficulty,
-        completed: false,
-      });
+      expect(res.body.id).toBe(taskOne._id.toHexString());
+      expect(res.body.stack).toBe(taskOne.stack);
+      expect(res.body.status).toBe('notStarted');
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -395,12 +441,12 @@ describe('Task routes', () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
       const updateBody = {
-        title: faker.lorem.sentence(5),
-        category: 'node',
+        stack: 'react',
+        creator: '5fc4aa77fbb5c260556866c6',
         description: faker.lorem.paragraph(),
-        price: faker.random.number(),
-        difficulty: 'intermediate',
-        completed: true,
+        dueDate: faker.date.future(2),
+        difficulty: 'easy',
+        status: 'inProgress',
       };
 
       const res = await request(app)
@@ -409,31 +455,22 @@ describe('Task routes', () => {
         .send(updateBody)
         .expect(httpStatus.OK);
 
-      expect(res.body).toEqual({
-        id: taskOne._id.toHexString(),
-        title: updateBody.title,
-        category: updateBody.category,
-        description: updateBody.description,
-        price: updateBody.price,
-        difficulty: updateBody.difficulty,
-        completed: updateBody.completed,
-      });
+      expect(res.body.id).toBe(taskOne._id.toHexString());
+      expect(res.body.stack).toBe(updateBody.stack);
+      expect(res.body.status).toBe(updateBody.status);
+      expect(res.body.difficulty).toBe(updateBody.difficulty);
 
       const dbTask = await Task.findById(taskOne._id);
       expect(dbTask).toBeDefined();
-      expect(dbTask).toMatchObject({
-        title: updateBody.title,
-        category: updateBody.category,
-        description: updateBody.description,
-        price: updateBody.price,
-        difficulty: updateBody.difficulty,
-        completed: updateBody.completed,
-      });
+      expect(dbTask.id).toBe(taskOne._id.toHexString());
+      expect(dbTask.stack).toBe(updateBody.stack);
+      expect(dbTask.status).toBe(updateBody.status);
+      expect(dbTask.difficulty).toBe(updateBody.difficulty);
     });
 
     test('should return 401 error if access token is missing', async () => {
       await insertTasks([taskOne]);
-      const updateBody = { title: faker.lorem.sentence(5) };
+      const updateBody = { stack: faker.lorem.word() };
 
       await request(app).patch(`/v1/tasks/${taskOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
@@ -441,7 +478,7 @@ describe('Task routes', () => {
     test('should return 404 if admin is updating task that is not found', async () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
-      const updateBody = { title: faker.lorem.sentence(5) };
+      const updateBody = { stack: faker.lorem.word() };
 
       await request(app)
         .patch(`/v1/tasks/${taskTwo._id}`)
@@ -453,7 +490,7 @@ describe('Task routes', () => {
     test('should return 400 error if taskId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
-      const updateBody = { title: faker.lorem.sentence(5) };
+      const updateBody = { stack: faker.lorem.word() };
 
       await request(app)
         .patch(`/v1/tasks/invalidId`)
@@ -466,6 +503,30 @@ describe('Task routes', () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
       const updateBody = { difficulty: 'invalid' };
+
+      await request(app)
+        .patch(`/v1/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if status is unknown', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne]);
+      const updateBody = { status: 'invalid' };
+
+      await request(app)
+        .patch(`/v1/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if creator is not a valid mongo ID', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne]);
+      const updateBody = { creator: 'invalid' };
 
       await request(app)
         .patch(`/v1/tasks/${taskOne._id}`)
