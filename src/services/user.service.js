@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const prompt = require('prompt');
 const { User } = require('../models');
+const taskService = require('./task.service');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const logger = require('../config/logger');
@@ -128,6 +129,12 @@ const updateUserById = async (userId, updateBody) => {
  * @returns {Promise<User>}
  */
 const updateUserTaskById = async (userId, taskId) => {
+  const task = await taskService.getTaskById(taskId);
+  if (!task) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  }
+  task.status = 'inProgress';
+  await task.save();
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

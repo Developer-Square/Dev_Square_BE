@@ -838,6 +838,19 @@ describe('User routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
+    test('should return 404 if task is not found', async () => {
+      await insertUsers([admin]);
+      const updateBody = {
+        taskId: '5ebac534954b54139806c172',
+      };
+
+      await request(app)
+        .post(`/v1/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
     test('should return 400 error if userId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       const updateBody = {
