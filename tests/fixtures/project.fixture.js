@@ -43,30 +43,30 @@ const projectFour = {
 
 const taskOne = {
   _id: '5ebac534954b54139806c601',
-  title: faker.lorem.sentence(5),
-  category: 'node',
+  stack: 'node',
+  creator: mongoose.Types.ObjectId(),
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'beginner',
+  dueDate: faker.date.future(2),
+  difficulty: 'medium',
 };
 
 const taskTwo = {
   _id: '5ebac534954b54139806c602',
-  title: faker.lorem.sentence(5),
-  category: 'node',
+  stack: 'node',
+  creator: '5fc4aa77fbb5c260556866c6',
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'intermediate',
+  dueDate: faker.date.future(2),
+  difficulty: 'easy',
 };
 
 const taskThree = {
   _id: '5ebac534954b54139806c603',
-  title: faker.lorem.sentence(5),
-  category: 'react',
+  stack: 'react',
+  creator: '5fc4aa77fbb5c260556866c6',
   description: faker.lorem.paragraph(),
-  price: faker.random.number(),
-  difficulty: 'intermediate',
-  completed: true,
+  dueDate: faker.date.future(2),
+  difficulty: 'easy',
+  status: 'inProgress',
 };
 
 const insertTasks = async (tasks) => {
