@@ -73,6 +73,10 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+    url:
+      envVars.NODE_ENV === 'production'
+        ? `https://developer-square-be.herokuapp.com/v1`
+        : `http://localhost:${envVars.PORT}/v1`,
   },
   admin: {
     name: envVars.ADMIN_NAME,
