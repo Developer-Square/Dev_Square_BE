@@ -61,21 +61,21 @@ const getProjectTaskData = async (id) => {
   const project = await Project.findById(id);
   if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
-  } else if (project.tasks.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
-  } else {
-    const tasks = [];
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < project.tasks.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
-      const data = await Task.findById(project.tasks[i]);
-      if (!data) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Invalid data');
-      }
-      tasks.push(data);
-    }
-    return tasks;
   }
+  if (project.tasks.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
+  }
+  const tasks = [];
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < project.tasks.length; i++) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await Task.findById(project.tasks[i]);
+    if (!data) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Invalid data');
+    }
+    tasks.push(data);
+  }
+  return tasks;
 };
 
 /**
