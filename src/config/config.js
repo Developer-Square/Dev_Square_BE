@@ -73,6 +73,7 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+    url: envVars.NODE_ENV === 'production' ? `http://localhost:3000/reset/password` : `http://localhost:3000/reset/password`,
   },
   admin: {
     name: envVars.ADMIN_NAME,
