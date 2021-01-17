@@ -133,8 +133,6 @@ const updateUserTaskById = async (userId, taskId) => {
   if (!task) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
   }
-  task.status = 'inProgress';
-  await task.save();
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -143,6 +141,8 @@ const updateUserTaskById = async (userId, taskId) => {
   if (user.tasks.indexOf(taskId) != -1) {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is already assigned the task');
   }
+  task.status = 'inProgress';
+  await task.save();
   user.tasks.push(taskId);
   await user.save();
   return user;
