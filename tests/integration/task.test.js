@@ -41,6 +41,7 @@ describe('Task routes', () => {
       expect(dbTask).toBeDefined();
       expect(dbTask.stack).toBe(newTask.stack);
       expect(dbTask.status).toBe('notStarted');
+      expect(dbTask.assigned).toBe(false);
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -102,6 +103,8 @@ describe('Task routes', () => {
       expect(res.body.results[0].id).toBe(taskOne._id.toHexString());
       expect(res.body.results[0].stack).toBe(taskOne.stack);
       expect(res.body.results[0].status).toBe('notStarted');
+      expect(res.body.results[0].assigned).toBe(false);
+      expect(res.body.results[2].assigned).toBe(true);
     });
 
     test('should return 401 if access token is missing', async () => {
@@ -151,6 +154,28 @@ describe('Task routes', () => {
         .get('/v1/tasks')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ status: taskThree.status })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(taskThree._id.toHexString());
+    });
+
+    test('should correctly apply filter on assigned field', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      const res = await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ assigned: true })
         .send()
         .expect(httpStatus.OK);
 
@@ -339,6 +364,18 @@ describe('Task routes', () => {
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 400 error if assigned is not boolean', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne, taskTwo, taskThree]);
+
+      await request(app)
+        .get('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ assigned: 'invalidboolean' })
+        .send()
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
 
   describe('GET /v1/tasks/:taskId', () => {
@@ -355,6 +392,7 @@ describe('Task routes', () => {
       expect(res.body.id).toBe(taskOne._id.toHexString());
       expect(res.body.stack).toBe(taskOne.stack);
       expect(res.body.status).toBe('notStarted');
+      expect(res.body.assigned).toBe(false);
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -447,6 +485,7 @@ describe('Task routes', () => {
         dueDate: faker.date.future(2),
         difficulty: 'easy',
         status: 'inProgress',
+        assigned: true,
       };
 
       const res = await request(app)
@@ -459,6 +498,7 @@ describe('Task routes', () => {
       expect(res.body.stack).toBe(updateBody.stack);
       expect(res.body.status).toBe(updateBody.status);
       expect(res.body.difficulty).toBe(updateBody.difficulty);
+      expect(res.body.assigned).toBe(updateBody.assigned);
 
       const dbTask = await Task.findById(taskOne._id);
       expect(dbTask).toBeDefined();
@@ -466,6 +506,7 @@ describe('Task routes', () => {
       expect(dbTask.stack).toBe(updateBody.stack);
       expect(dbTask.status).toBe(updateBody.status);
       expect(dbTask.difficulty).toBe(updateBody.difficulty);
+      expect(dbTask.assigned).toBe(updateBody.assigned);
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -515,6 +556,18 @@ describe('Task routes', () => {
       await insertUsers([admin]);
       await insertTasks([taskOne]);
       const updateBody = { status: 'invalid' };
+
+      await request(app)
+        .patch(`/v1/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if assigned is not boolean', async () => {
+      await insertUsers([admin]);
+      await insertTasks([taskOne]);
+      const updateBody = { assigned: 'invalid' };
 
       await request(app)
         .patch(`/v1/tasks/${taskOne._id}`)
