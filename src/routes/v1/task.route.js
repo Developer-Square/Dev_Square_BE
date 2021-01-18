@@ -111,6 +111,11 @@ module.exports = router;
  *            type: string
  *          description: Task status
  *        - in: query
+ *          name: assigned
+ *          schema:
+ *            type: boolean
+ *          description: Whether the task is assigned either true or false
+ *        - in: query
  *          name: sortBy
  *          schema:
  *            type: string
@@ -224,6 +229,8 @@ module.exports = router;
  *                status:
  *                  type: string
  *                  enum: [notStarted, inProgress, onHold, cancelled, completed]
+ *                assigned:
+ *                  type: boolean
  *              example:
  *                stack: Node
  *                creator: 5ebac534954b54139806c112
@@ -231,6 +238,7 @@ module.exports = router;
  *                dueDate: '2021-05-18T16:00:00Z'
  *                difficulty: medium
  *                status: inProgress
+ *                assigned: true
  *      responses:
  *        "200":
  *          description: OK
