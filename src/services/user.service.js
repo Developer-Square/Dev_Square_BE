@@ -149,6 +149,31 @@ const updateUserTaskById = async (userId, taskId) => {
 };
 
 /**
+ * Delete task from user
+ * @param {ObjectId} userId
+ * @param {Object} taskId
+ * @returns {Promise<User>}
+ */
+const deleteTaskFromUser = async (userId, taskId) => {
+  const task = await taskService.getTaskById(taskId);
+  if (!task) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  }
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  // eslint-disable-next-line eqeqeq
+  if (user.tasks.indexOf(taskId) === -1) {
+    throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is not assigned the task');
+  }
+  let index = user.tasks.indexOf(taskId);
+  user.tasks.splice(index, 1);
+  await user.save();
+  return user;
+};
+
+/**
  * Update status by user Id
  * @param {ObjectId} userId
  * @param {String} newStatus
@@ -189,4 +214,5 @@ module.exports = {
   updateStatusById,
   getUserTasks,
   createAdmin,
+  deleteTaskFromUser,
 };
