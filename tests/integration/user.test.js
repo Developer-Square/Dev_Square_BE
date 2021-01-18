@@ -477,6 +477,102 @@ describe('User routes', () => {
     });
   });
 
+  describe('DELETE /v1/users/tasks/:userId', () => {
+
+    beforeEach(async() => {
+      await insertTasks([taskOne]);
+    });
+
+    test('should return 204 if data is ok', async () => {
+      await insertUsers([userOne]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.NO_CONTENT);
+
+      const dbUser = await User.findById(userOne._id);
+      expect(dbUser.tasks.length).toBe(0);
+    });
+
+    test('should return 401 error if access token is missing', async () => {
+      await insertUsers([userOne]);
+
+      await request(app).delete(`/v1/users/tasks/${userOne._id}`).send({taskId: '5ebac534954b54139806c601'}).expect(httpStatus.UNAUTHORIZED);
+    });
+
+    test('should return 403 error if user is trying to delete another user"s tasks', async () => {
+      await insertUsers([userOne, userTwo]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userTwo._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 204 if admin is trying to delete another user"s tasks', async () => {
+      await insertUsers([userOne, admin]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.NO_CONTENT);
+    });
+
+    test('should return 400 error if userId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
+
+      await request(app)
+        .delete('/v1/users/tasks/invalidId')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 400 error if taskId is not a valid mongo id', async () => {
+      await insertUsers([admin, userOne]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: 'invalidId'})
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 404 error if user is not found', async () => {
+      await insertUsers([admin]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 error if task is not found', async () => {
+      await insertUsers([admin, userOne]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c602'})
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 406 error if user is not assigned a task', async () => {
+      await insertUsers([admin, userTwo]);
+
+      await request(app)
+        .delete(`/v1/users/tasks/${userTwo._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({taskId: '5ebac534954b54139806c601'})
+        .expect(httpStatus.NOT_ACCEPTABLE);
+    });
+  });
+
   describe('PATCH /v1/users/:userId', () => {
     test('should return 200 and successfully update user if data is ok', async () => {
       await insertUsers([userOne]);

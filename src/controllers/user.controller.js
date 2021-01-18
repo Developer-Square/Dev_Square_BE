@@ -39,6 +39,11 @@ const addTaskToUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const removeTaskFromUser = catchAsync(async (req, res) => {
+  const user = await userService.deleteTaskFromUser(req.params.userId, req.body.taskId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 const getUserTasks = catchAsync(async (req, res) => {
   const tasks = await userService.getUserTasks(req.params.userId);
   res.send(tasks);
@@ -58,4 +63,5 @@ module.exports = {
   addTaskToUser,
   changeUserStatus,
   getUserTasks,
+  removeTaskFromUser,
 };

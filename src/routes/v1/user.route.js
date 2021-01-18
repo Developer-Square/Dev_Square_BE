@@ -22,7 +22,10 @@ router
   .route('/status/:userId')
   .post(auth('manageUsers'), validate(userValidation.changeStatus), userController.changeUserStatus);
 
-router.route('/tasks/:userId').get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks);
+router
+  .route('/tasks/:userId')
+  .get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks)
+  .delete(auth('manageUsers'), validate(userValidation.unassignTask), userController.removeTaskFromUser);
 
 module.exports = router;
 
@@ -377,4 +380,40 @@ module.exports = router;
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
  *          $ref: '#/components/responses/Forbidden'
+ * 
+ *    delete:
+ *      summary: Delete a task from a user
+ *      description: Logged in users can delete only their tasks. Only admins can delete other users' tasks.
+ *      tags: [Users, Tasks]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: User id
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - taskId
+ *              properties:
+ *                taskId:
+ *                  type: string
+ *              example:
+ *                taskId: 5ebac534954b54139806c112
+ *      responses:
+ *        "200":
+ *          description: No content
+ *        "401":
+ *          $ref: '#/components/responses/Unauthorized'
+ *        "403":
+ *          $ref: '#/components/responses/Forbidden'
+ *        "404":
+ *          $ref: '#/components/responses/NotFound'
  */
