@@ -167,7 +167,7 @@ const deleteTaskFromUser = async (userId, taskId) => {
   if (user.tasks.indexOf(taskId) === -1) {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'User is not assigned the task');
   }
-  let index = user.tasks.indexOf(taskId);
+  const index = user.tasks.indexOf(taskId);
   user.tasks.splice(index, 1);
   await user.save();
   return user;

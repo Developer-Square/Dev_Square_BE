@@ -478,8 +478,7 @@ describe('User routes', () => {
   });
 
   describe('DELETE /v1/users/tasks/:userId', () => {
-
-    beforeEach(async() => {
+    beforeEach(async () => {
       await insertTasks([taskOne]);
     });
 
@@ -489,7 +488,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.NO_CONTENT);
 
       const dbUser = await User.findById(userOne._id);
@@ -499,7 +498,10 @@ describe('User routes', () => {
     test('should return 401 error if access token is missing', async () => {
       await insertUsers([userOne]);
 
-      await request(app).delete(`/v1/users/tasks/${userOne._id}`).send({taskId: '5ebac534954b54139806c601'}).expect(httpStatus.UNAUTHORIZED);
+      await request(app)
+        .delete(`/v1/users/tasks/${userOne._id}`)
+        .send({ taskId: '5ebac534954b54139806c601' })
+        .expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 403 error if user is trying to delete another user"s tasks', async () => {
@@ -508,7 +510,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userTwo._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.FORBIDDEN);
     });
 
@@ -518,7 +520,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.NO_CONTENT);
     });
 
@@ -528,7 +530,7 @@ describe('User routes', () => {
       await request(app)
         .delete('/v1/users/tasks/invalidId')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.BAD_REQUEST);
     });
 
@@ -538,7 +540,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: 'invalidId'})
+        .send({ taskId: 'invalidId' })
         .expect(httpStatus.BAD_REQUEST);
     });
 
@@ -548,7 +550,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.NOT_FOUND);
     });
 
@@ -558,7 +560,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c602'})
+        .send({ taskId: '5ebac534954b54139806c602' })
         .expect(httpStatus.NOT_FOUND);
     });
 
@@ -568,7 +570,7 @@ describe('User routes', () => {
       await request(app)
         .delete(`/v1/users/tasks/${userTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send({taskId: '5ebac534954b54139806c601'})
+        .send({ taskId: '5ebac534954b54139806c601' })
         .expect(httpStatus.NOT_ACCEPTABLE);
     });
   });

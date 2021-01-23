@@ -12,7 +12,7 @@ describe('User model', () => {
         role: 'user',
         tasks: [],
         skills: ['JS', 'PHP', 'Django', 'C'],
-        status: 'available'
+        status: 'available',
       };
     });
 
@@ -60,7 +60,7 @@ describe('User model', () => {
         role: 'user',
         tasks: [],
         skills: ['JS', 'PHP', 'Django', 'C'],
-        status: 'available'
+        status: 'available',
       };
       expect(new User(newUser).toJSON()).not.toHaveProperty('password');
     });

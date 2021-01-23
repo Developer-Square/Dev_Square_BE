@@ -15,8 +15,6 @@ const { roleRights } = require('../../src/config/roles');
 const { tokenTypes } = require('../../src/config/tokens');
 const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
-const array = require('@hapi/joi/lib/types/array');
-const string = require('@hapi/joi/lib/types/string');
 
 setupTestDB();
 
@@ -35,7 +33,15 @@ describe('Auth routes', () => {
       const res = await request(app).post('/v1/auth/register').send(newUser).expect(httpStatus.CREATED);
 
       expect(res.body.user).not.toHaveProperty('password');
-      expect(res.body.user).toEqual({ id: expect.anything(), name: newUser.name, email: newUser.email, role: 'user', tasks: expect.anything(), skills: expect.anything(), status: expect.anything() });
+      expect(res.body.user).toEqual({
+        id: expect.anything(),
+        name: newUser.name,
+        email: newUser.email,
+        role: 'user',
+        tasks: expect.anything(),
+        skills: expect.anything(),
+        status: expect.anything(),
+      });
 
       const dbUser = await User.findById(res.body.user.id);
       expect(dbUser).toBeDefined();
@@ -97,7 +103,7 @@ describe('Auth routes', () => {
         role: userOne.role,
         tasks: userOne.tasks,
         skills: userOne.skills,
-        status: userOne.status
+        status: userOne.status,
       });
 
       expect(res.body.tokens).toEqual({

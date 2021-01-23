@@ -380,7 +380,7 @@ module.exports = router;
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":
  *          $ref: '#/components/responses/Forbidden'
- * 
+ *
  *    delete:
  *      summary: Delete a task from a user
  *      description: Logged in users can delete only their tasks. Only admins can delete other users' tasks.

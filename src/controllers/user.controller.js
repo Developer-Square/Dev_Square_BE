@@ -40,7 +40,7 @@ const addTaskToUser = catchAsync(async (req, res) => {
 });
 
 const removeTaskFromUser = catchAsync(async (req, res) => {
-  const user = await userService.deleteTaskFromUser(req.params.userId, req.body.taskId);
+  await userService.deleteTaskFromUser(req.params.userId, req.body.taskId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
