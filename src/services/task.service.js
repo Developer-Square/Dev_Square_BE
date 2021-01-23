@@ -30,18 +30,14 @@ const queryTask = async (filter, options) => {
  * Get all Tasks
  * @returns {Promise<Task>}
  */
-const getTasks = async () => {
-  return Task.find({});
-};
+const getTasks = async () => Task.find({});
 
 /**
  * Get task by id
  * @param {ObjectId} id
  * @returns {Promise<Task>}
  */
-const getTaskById = async (id) => {
-  return Task.findById(id);
-};
+const getTaskById = async (id) => Task.findById(id);
 
 /**
  * Update item by id

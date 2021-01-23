@@ -31,9 +31,7 @@ const queryItem = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Item>}
  */
-const getItemById = async (id) => {
-  return Portfolio.findById(id);
-};
+const getItemById = async (id) => Portfolio.findById(id);
 
 /**
  * Update item by id

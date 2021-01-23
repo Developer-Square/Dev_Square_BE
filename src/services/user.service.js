@@ -30,7 +30,7 @@ const createAdmin = async () => {
     prompt.start();
     prompt.message = 'Password';
 
-    prompt.get(adminProperties, async function (err, result) {
+    prompt.get(adminProperties, async (err, result) => {
       if (err) {
         // eslint-disable-next-line no-console
         console.log(err);
@@ -77,18 +77,14 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id) => {
-  return User.findById(id);
-};
+const getUserById = async (id) => User.findById(id);
 
 /**
  * Get user by email
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
-  return User.findOne({ email });
-};
+const getUserByEmail = async (email) => User.findOne({ email });
 
 /**
  * Get user tasks by id

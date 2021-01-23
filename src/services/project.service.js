@@ -32,9 +32,7 @@ const queryProject = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Project>}
  */
-const getProjectById = async (id) => {
-  return Project.findById(id);
-};
+const getProjectById = async (id) => Project.findById(id);
 
 /**
  * Get Project Tasks by id
