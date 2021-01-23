@@ -13,7 +13,6 @@ updates:
       - dependency-type: "direct"
     assignees:
       - "saisilinus"
-      - "MutwiriFrank"
     commit-message:
       prefix: "yarn prod"
       prefix-development: "yarn dev"
@@ -25,4 +24,3 @@ updates:
       separator: "-"
     reviewers:
       - "saisilinus"
-      - "MutwiriFrank"
