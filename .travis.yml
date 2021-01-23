@@ -8,7 +8,7 @@ cache: yarn
     - "node_modules"
 branches:
   only:
-    - master
+    - main
 env:
   global:
     - PORT=3000
