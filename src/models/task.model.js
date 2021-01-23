@@ -34,6 +34,14 @@ const taskSchema = mongoose.Schema(
       default: 'notStarted',
       enum: ['notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'],
     },
+    assigned: {
+      type: Boolean,
+      default: false,
+    },
+    created_at: {
+      type: Date,
+      default: Date.now,
+    }
   },
   {
     timestamps: true,

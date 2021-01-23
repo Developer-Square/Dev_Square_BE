@@ -28,6 +28,7 @@ const taskThree = {
   dueDate: faker.date.future(2),
   difficulty: 'easy',
   status: 'inProgress',
+  assigned: true,
 };
 
 const insertTasks = async (tasks) => {

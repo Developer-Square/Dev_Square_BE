@@ -66,6 +66,15 @@ const assignTask = {
   }),
 };
 
+const unassignTask = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    taskId: Joi.string().required().custom(objectId),
+  }),
+};
+
 const changeStatus = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),
@@ -84,4 +93,5 @@ module.exports = {
   assignTask,
   changeStatus,
   getUserTasks,
+  unassignTask,
 };

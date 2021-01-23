@@ -18,6 +18,7 @@ const queryTasks = {
     creator: Joi.string().custom(objectId),
     difficulty: Joi.string().valid('easy', 'medium', 'hard'),
     status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
+    assigned: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -42,6 +43,7 @@ const updateTask = {
       dueDate: Joi.date(),
       difficulty: Joi.string().valid('easy', 'medium', 'hard'),
       status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
+      assigned: Joi.boolean(),
     })
     .min(1),
 };
