@@ -1,3 +1,7 @@
+## TecHive Backend App
+
+[![Build Status](https://travis-ci.com/Developer-Square/Dev_Square_BE.svg?token=izsvsbihgxQowSRq945F&branch=main)](https://travis-ci.com/Developer-Square/Dev_Square_BE)
+
 ## Table of Contents
 
 - [Features](#features)
