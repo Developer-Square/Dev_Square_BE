@@ -4,15 +4,13 @@ node_js:
 services:
   - mongodb
 cache: yarn
-  directories:
-    - "node_modules"
 branches:
   only:
     - main
 env:
   global:
     - PORT=3000
-    - MONGODB_URL=mongodb://127.0.0.1:27017/devSquareBE
+    - MONGODB_URL=mongodb://localhost:27017/devSquareBE
     - JWT_SECRET=thisisasamplesecret
     - JWT_ACCESS_EXPIRATION_MINUTES=30
     - JWT_REFRESH_EXPIRATION_DAYS=30
