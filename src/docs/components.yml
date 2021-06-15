@@ -136,6 +136,14 @@ components:
       example:
         tasks: [5ebac534954b54139806c112, 5ebac534954b54139806c113, 5ebac534954b54139806c112]
 
+    Status:
+      type: object
+      properties:
+        status:
+          type: boolean
+      example:
+        status: true
+
     AuthTokens:
       type: object
       properties:

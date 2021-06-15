@@ -55,7 +55,9 @@ if (config.env === 'production') {
 app.use('/v1', routes);
 
 // static routes
-app.use(express.static(path.join(__dirname, 'public')));
+if (config.env === 'production') {
+  app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
