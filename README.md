@@ -1,6 +1,7 @@
 ## TecHive Backend App
 
 [![Build Status](https://travis-ci.com/Developer-Square/Dev_Square_BE.svg?token=izsvsbihgxQowSRq945F&branch=main)](https://travis-ci.com/Developer-Square/Dev_Square_BE)
+[![Node.js CI](https://github.com/Developer-Square/Dev_Square_BE/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/Developer-Square/Dev_Square_BE/actions/workflows/node.js.yml)
 
 ## Table of Contents
 
