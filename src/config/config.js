@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('@hapi/joi');
+const production = require('./production');
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
@@ -9,7 +10,6 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
-    MONGODB_ATLAS_URL: Joi.string().required().description('Mongo DB Atlas url'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
@@ -18,10 +18,6 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
-    ADMIN_NAME: Joi.string().required().default('admin').description('initial admin username'),
-    ADMIN_PASSWORD: Joi.string().required().default('admin1234').description('initial admin password'),
-    ADMIN_EMAIL: Joi.string().required().default('admin@example.com').description('initial admin email'),
-    ADMIN_ROLE: Joi.string().required().default('admin').description('admin role'),
   })
   .unknown();
 
@@ -31,26 +27,14 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
-const changeMongoUrl = () => {
-  switch (envVars.NODE_ENV) {
-    case 'test':
-      // eslint-disable-next-line prefer-template
-      return envVars.MONGODB_URL + '-test';
-    case 'production':
-      return envVars.MONGODB_ATLAS_URL;
-    case 'development':
-      return envVars.MONGODB_URL;
-    default:
-      return envVars.MONGODB_URL;
-  }
-};
-
 module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   mongoose: {
-    // url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
-    url: changeMongoUrl(),
+    url:
+      envVars.NODE_ENV === 'production'
+        ? production.MONGODB_ATLAS_URL
+        : envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {
       useCreateIndex: true,
       useNewUrlParser: true,
@@ -58,7 +42,7 @@ module.exports = {
     },
   },
   jwt: {
-    secret: envVars.JWT_SECRET,
+    secret: envVars.NODE_ENV === 'production' ? production.JWT_SECRET : envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: 10,
@@ -68,8 +52,8 @@ module.exports = {
       host: envVars.SMTP_HOST,
       port: envVars.SMTP_PORT,
       auth: {
-        user: envVars.SMTP_USERNAME,
-        pass: envVars.SMTP_PASSWORD,
+        user: production.SMTP_USERNAME,
+        pass: production.SMTP_PASSWORD,
       },
     },
     from: envVars.EMAIL_FROM,
@@ -77,11 +61,5 @@ module.exports = {
       envVars.NODE_ENV === 'production'
         ? `https://laughing-stonebraker-18a112.netlify.app/reset/password`
         : `http://localhost:3000/reset/password`,
-  },
-  admin: {
-    name: envVars.ADMIN_NAME,
-    email: envVars.ADMIN_EMAIL,
-    password: envVars.ADMIN_PASSWORD,
-    role: envVars.ADMIN_ROLE,
   },
 };

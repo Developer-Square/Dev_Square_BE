@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
-const { userService } = require('./services');
-// require('dotenv').config();
-
-// const port = process.env.PORT || 3000;
-// const host = process.env.HOST || '0.0.0.0';
 
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => {
@@ -14,12 +9,6 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => 
   server = app.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
   });
-
-  if (config.env === 'development') {
-    setTimeout(async () => {
-      await userService.createAdmin();
-    }, 100);
-  }
 });
 
 const exitHandler = () => {
