@@ -215,6 +215,20 @@ List of available routes:
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
+**Project routes**:\
+`POST /v1/projects` - create a project\
+`GET /v1/projects` - get all projects\
+`GET /v1/projects/:projectId` - get project using id\
+`PATCH /v1/projects/:projectId` - update project\
+`DELETE /v1/projects/:projectId` - delete project
+
+**Task routes**:\
+`POST /v1/tasks` - create a task\
+`GET /v1/tasks` - get all tasks\
+`GET /v1/tasks/:taskId` - get task using id\
+`PATCH /v1/tasks/:taskId` - update project\
+`DELETE /v1/tasks/:taskId` - delete task
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.
