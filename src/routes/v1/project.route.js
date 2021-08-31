@@ -9,17 +9,13 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageProjects'), validate(projectValidation.createProject), projectController.createProject)
-  .get(auth('getProjects'), validate(projectValidation.queryProject), projectController.queryProject);
+  .get(validate(projectValidation.queryProject), projectController.queryProject);
 
 router
   .route('/:projectId')
   .get(auth('getProjects'), validate(projectValidation.getProject), projectController.getProject)
   .patch(auth('manageProjects'), validate(projectValidation.updateProject), projectController.updateProject)
   .delete(auth('manageProjects'), validate(projectValidation.deleteProject), projectController.deleteProject);
-
-router
-  .route('/tasks/:projectId')
-  .get(auth('getProjects'), validate(projectValidation.getTaskData), projectController.getTaskData);
 
 module.exports = router;
 
@@ -47,31 +43,24 @@ module.exports = router;
  *            schema:
  *              type: object
  *              required:
- *                - clientId
- *                - name
+ *                - client
+ *                - title
  *                - description
  *                - dueDate
- *                - stack
  *              properties:
- *                clientId:
+ *                client:
  *                  type: string
- *                name:
+ *                title:
  *                  type: string
  *                description:
  *                  type: string
  *                dueDate:
  *                  type: date
- *                stack:
- *                  type: string
- *                tasks:
- *                  type: array
  *              example:
- *                clientId: 5ebac534954b54139806c112
- *                name: Backend for mobile app
+ *                client: 5ebac534954b54139806c112
+ *                title: Backend for mobile app
  *                description: Backend for mobile app
  *                dueDate: '2021-05-18T16:00:00Z'
- *                stack: node, mongoDB
- *                tasks: [5ebac534954b54139806c113, 5ebac534954b54139806c114]
  *      responses:
  *        "201":
  *          description: Created
@@ -86,26 +75,19 @@ module.exports = router;
  *
  *    get:
  *      summary: Get all Projects
- *      description: Only admins can retrieve projects.
+ *      description: All users can retrieve projects.
  *      tags: [Project]
- *      security:
- *        - bearerAuth: []
  *      parameters:
  *        - in: query
- *          name: name
+ *          name: title
  *          schema:
  *            type: string
- *          description: Project name
+ *          description: Project title
  *        - in: query
- *          name: clientId
+ *          name: client
  *          schema:
  *            type: string
  *          description: Client's Id
- *        - in: query
- *          name: stack
- *          schema:
- *            type: string
- *          description: stack
  *        - in: query
  *          name: sortBy
  *          schema:
@@ -206,25 +188,19 @@ module.exports = router;
  *            schema:
  *              type: object
  *              properties:
- *                clientId:
+ *                client:
  *                  type: string
- *                name:
+ *                title:
  *                  type: string
  *                description:
  *                  type: string
  *                dueDate:
  *                  type: date
- *                stack:
- *                  type: string
- *                tasks:
- *                  type: array
  *              example:
- *                clientId: 5ebac534954b54139806c112
- *                name: Backend for mobile app
+ *                client: 5ebac534954b54139806c112
+ *                title: Backend for mobile app
  *                description: Backend for mobile app
  *                dueDate: '2021-05-18T16:00:00Z'
- *                stack: node, mongoDB
- *                tasks: [5ebac534954b54139806c113, 5ebac534954b54139806c114]
  *      responses:
  *        "200":
  *          description: OK
@@ -255,38 +231,6 @@ module.exports = router;
  *      responses:
  *        "200":
  *          description: No content
- *        "401":
- *          $ref: '#/components/responses/Unauthorized'
- *        "403":
- *          $ref: '#/components/responses/Forbidden'
- *        "404":
- *          $ref: '#/components/responses/NotFound'
- */
-
-/**
- * @swagger
- * path:
- *  /project/tasks/{id}:
- *    get:
- *      summary: Get a project's tasks
- *      description: Only admins and clients can retrieve project tasks.
- *      tags: [Project]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          schema:
- *            type: string
- *          description: Project id
- *      responses:
- *        "200":
- *          description: OK
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/ProjectTasks'
  *        "401":
  *          $ref: '#/components/responses/Unauthorized'
  *        "403":

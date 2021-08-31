@@ -13,19 +13,9 @@ router
 
 router
   .route('/:userId')
-  .post(auth('manageUsers'), validate(userValidation.assignTask), userController.addTaskToUser)
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
-
-router
-  .route('/status/:userId')
-  .post(auth('manageUsers'), validate(userValidation.changeStatus), userController.changeUserStatus);
-
-router
-  .route('/tasks/:userId')
-  .get(auth('getUsers'), validate(userValidation.getUserTasks), userController.getUserTasks)
-  .delete(auth('manageUsers'), validate(userValidation.unassignTask), userController.removeTaskFromUser);
 
 module.exports = router;
 
@@ -169,44 +159,6 @@ module.exports = router;
  * @swagger
  * path:
  *  /users/{id}:
- *    post:
- *      summary: Assign task to a user
- *      description: A user can only assign a task to themselves
- *      tags: [Users, Tasks]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          schema:
- *            type: string
- *          description: User id
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - taskId
- *              properties:
- *                taskId:
- *                  type: string
- *              example:
- *                taskId: afafdhftraaddahagag
- *      responses:
- *        "201":
- *          description: Created
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/User'
- *        "401":
- *          $ref: '#/components/responses/Unauthorized'
- *        "403":
- *          $ref: '#/components/responses/Forbidden'
- *
  *    get:
  *      summary: Get a user
  *      description: Logged in users can fetch only their own user information. Only admins can fetch other users.
@@ -298,115 +250,6 @@ module.exports = router;
  *          schema:
  *            type: string
  *          description: User id
- *      responses:
- *        "200":
- *          description: No content
- *        "401":
- *          $ref: '#/components/responses/Unauthorized'
- *        "403":
- *          $ref: '#/components/responses/Forbidden'
- *        "404":
- *          $ref: '#/components/responses/NotFound'
- */
-
-/**
- * @swagger
- * path:
- *  /users/status/{id}:
- *    post:
- *      summary: Change the status of a user
- *      description: Logged in users can change their status. Only admins can change everyone's status
- *      tags: [Users, Status]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          schema:
- *            type: string
- *          description: User id
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - newStatus
- *              properties:
- *                newStatus:
- *                  type: string
- *              example:
- *                newStatus: available
- *      responses:
- *        "200":
- *          description: Created
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/User'
- *        "401":
- *          $ref: '#/components/responses/Unauthorized'
- *        "403":
- *          $ref: '#/components/responses/Forbidden'
- */
-
-/**
- * @swagger
- * path:
- *  /users/tasks/{id}:
- *    get:
- *      summary: Get the tasks of a user
- *      description: Logged in users can get their tasks. Only admins can get everyone's tasks
- *      tags: [Users, Tasks]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          schema:
- *            type: string
- *          description: User id
- *      responses:
- *        "200":
- *          description: OK
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/TaskList'
- *        "401":
- *          $ref: '#/components/responses/Unauthorized'
- *        "403":
- *          $ref: '#/components/responses/Forbidden'
- *
- *    delete:
- *      summary: Delete a task from a user
- *      description: Logged in users can delete only their tasks. Only admins can delete other users' tasks.
- *      tags: [Users, Tasks]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          schema:
- *            type: string
- *          description: User id
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - taskId
- *              properties:
- *                taskId:
- *                  type: string
- *              example:
- *                taskId: 5ebac534954b54139806c112
  *      responses:
  *        "200":
  *          description: No content

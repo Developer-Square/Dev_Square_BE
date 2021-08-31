@@ -12,7 +12,7 @@ roleRights.set(roles[1], [
   'getProjects',
   'manageProjects',
 ]);
-roleRights.set(roles[2], ['getProjects']);
+roleRights.set(roles[2], ['getProjects', 'getTasks']);
 
 module.exports = {
   roles,

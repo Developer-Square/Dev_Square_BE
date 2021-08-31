@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 const { Project } = require('../models');
-const { Task } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -33,48 +32,6 @@ const queryProject = async (filter, options) => {
  * @returns {Promise<Project>}
  */
 const getProjectById = async (id) => Project.findById(id);
-
-/**
- * Get Project Tasks by id
- * @param {ObjectId} id
- * @returns {Promise<Project>}
- */
-const getProjectTasksById = async (id) => {
-  const project = await Project.findById(id);
-  if (!project) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
-  } else if (project.tasks.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
-  } else {
-    return Project.aggregateTasks(id);
-  }
-};
-
-/**
- * Get Project Tasks by id
- * @param {ObjectId} id
- * @returns {Promise<Project>}
- */
-const getProjectTaskData = async (id) => {
-  const project = await Project.findById(id);
-  if (!project) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
-  }
-  if (project.tasks.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tasks not found');
-  }
-  const tasks = [];
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < project.tasks.length; i++) {
-    // eslint-disable-next-line no-await-in-loop
-    const data = await Task.findById(project.tasks[i]);
-    if (!data) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Invalid data');
-    }
-    tasks.push(data);
-  }
-  return tasks;
-};
 
 /**
  * Update Project by id
@@ -112,6 +69,4 @@ module.exports = {
   getProjectById,
   updateProjectById,
   deleteProjectById,
-  getProjectTasksById,
-  getProjectTaskData,
 };

@@ -43,14 +43,13 @@ module.exports = router;
  *            schema:
  *              type: object
  *              required:
- *                - stack
+ *                - title
  *                - creator
  *                - description
  *                - dueDate
- *                - difficulty
- *                - status
+ *                - project
  *              properties:
- *                stack:
+ *                title:
  *                  type: string
  *                creator:
  *                  type: string
@@ -58,19 +57,14 @@ module.exports = router;
  *                  type: string
  *                dueDate:
  *                  type: date
- *                difficulty:
+ *                project:
  *                  type: string
- *                  enum: [easy, medium, hard]
- *                status:
- *                  type: string
- *                  enum: [notStarted, inProgress, onHold, cancelled, completed]
  *              example:
- *                stack: Node
+ *                title: Node project task one
  *                creator: 5ebac534954b54139806c112
  *                description: E-commerce frontend blah blah blah
  *                dueDate: '2021-05-18T16:00:00Z'
- *                difficulty: medium
- *                status: inProgress
+ *                project: 6ebac534954b54139806c112
  *      responses:
  *        "201":
  *          description: Created
@@ -85,36 +79,31 @@ module.exports = router;
  *
  *    get:
  *      summary: Get all tasks
- *      description: Only admins can retrieve all tasks.
+ *      description: Admins and clients can retrieve tasks.
  *      tags: [Tasks]
  *      security:
  *        - bearerAuth: []
  *      parameters:
  *        - in: query
- *          name: stack
+ *          name: project
  *          schema:
  *            type: string
- *          description: Task Stack
+ *          description: Project that the task belongs to
  *        - in: query
  *          name: creator
  *          schema:
  *            type: string
- *          description: The developer who created the task
+ *          description: The user who created the task
  *        - in: query
- *          name: difficulty
+ *          name: title
  *          schema:
  *            type: string
- *          description: The difficulty of the task
+ *          description: The title of the task
  *        - in: query
  *          name: status
  *          schema:
  *            type: string
  *          description: Task status
- *        - in: query
- *          name: assigned
- *          schema:
- *            type: boolean
- *          description: Whether the task is assigned either true or false
  *        - in: query
  *          name: sortBy
  *          schema:
@@ -197,7 +186,7 @@ module.exports = router;
  *
  *    patch:
  *      summary: Update a task
- *      description: Logged in users can only update their tasks. Only admins can update other users' tasks.
+ *      description: Only admins can update tasks
  *      tags: [Tasks]
  *      security:
  *        - bearerAuth: []
@@ -215,7 +204,7 @@ module.exports = router;
  *            schema:
  *              type: object
  *              properties:
- *                stack:
+ *                project:
  *                  type: string
  *                creator:
  *                  type: string
@@ -223,22 +212,18 @@ module.exports = router;
  *                  type: string
  *                dueDate:
  *                  type: date
- *                difficulty:
+ *                title:
  *                  type: string
- *                  enum: [easy, medium, hard]
  *                status:
  *                  type: string
  *                  enum: [notStarted, inProgress, onHold, cancelled, completed]
- *                assigned:
- *                  type: boolean
  *              example:
- *                stack: Node
+ *                title: Node project task one
  *                creator: 5ebac534954b54139806c112
  *                description: E-commerce frontend blah blah blah
  *                dueDate: '2021-05-18T16:00:00Z'
- *                difficulty: medium
+ *                project: 8ebac534954b54139806c112
  *                status: inProgress
- *                assigned: true
  *      responses:
  *        "200":
  *          description: OK
@@ -255,7 +240,7 @@ module.exports = router;
  *
  *    delete:
  *      summary: Delete a task
- *      description: Logged in users can delete only their tasks. Only admins can delete other users' tasks.
+ *      description: Only admins can delete tasks
  *      tags: [Tasks]
  *      security:
  *        - bearerAuth: []

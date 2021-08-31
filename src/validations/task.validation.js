@@ -3,22 +3,20 @@ const { objectId } = require('./custom.validation');
 
 const createTask = {
   body: Joi.object().keys({
-    stack: Joi.string().required(),
+    title: Joi.string().required(),
     creator: Joi.string().required().custom(objectId),
+    project: Joi.string().required().custom(objectId),
     description: Joi.string().required(),
     dueDate: Joi.date().required(),
-    difficulty: Joi.string().required().valid('easy', 'medium', 'hard'),
-    status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
   }),
 };
 
 const queryTasks = {
   query: Joi.object().keys({
-    stack: Joi.string(),
+    project: Joi.string().custom(objectId),
     creator: Joi.string().custom(objectId),
-    difficulty: Joi.string().valid('easy', 'medium', 'hard'),
+    title: Joi.string(),
     status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
-    assigned: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -37,13 +35,12 @@ const updateTask = {
   }),
   body: Joi.object()
     .keys({
-      stack: Joi.string(),
+      project: Joi.string().custom(objectId),
       creator: Joi.string().custom(objectId),
       description: Joi.string(),
+      title: Joi.string(),
       dueDate: Joi.date(),
-      difficulty: Joi.string().valid('easy', 'medium', 'hard'),
       status: Joi.string().valid('notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'),
-      assigned: Joi.boolean(),
     })
     .min(1),
 };

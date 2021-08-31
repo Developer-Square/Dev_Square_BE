@@ -27,12 +27,6 @@ const queryTask = async (filter, options) => {
 };
 
 /**
- * Get all Tasks
- * @returns {Promise<Task>}
- */
-const getTasks = async () => Task.find({});
-
-/**
  * Get task by id
  * @param {ObjectId} id
  * @returns {Promise<Task>}
@@ -73,7 +67,6 @@ module.exports = {
   createTask,
   queryTask,
   getTaskById,
-  getTasks,
   updateTaskById,
   deleteTaskById,
 };

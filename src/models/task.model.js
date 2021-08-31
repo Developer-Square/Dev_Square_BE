@@ -1,11 +1,18 @@
 const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+const { paginate, toJSONWithDates } = require('./plugins');
+const Project = require('./project.model');
+const User = require('./user.model');
 
 const taskSchema = mongoose.Schema(
   {
-    stack: {
+    title: {
       type: String,
       trim: true,
+      required: true,
+    },
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Project,
       required: true,
     },
     description: {
@@ -14,18 +21,12 @@ const taskSchema = mongoose.Schema(
       trim: true,
     },
     creator: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User,
       required: true,
-      trim: true,
     },
     dueDate: {
       type: Date,
-      required: true,
-    },
-    difficulty: {
-      type: String,
-      trim: true,
-      enum: ['easy', 'medium', 'hard'],
       required: true,
     },
     status: {
@@ -34,14 +35,6 @@ const taskSchema = mongoose.Schema(
       default: 'notStarted',
       enum: ['notStarted', 'inProgress', 'onHold', 'cancelled', 'completed'],
     },
-    assigned: {
-      type: Boolean,
-      default: false,
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
@@ -49,7 +42,7 @@ const taskSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-taskSchema.plugin(toJSON);
+taskSchema.plugin(toJSONWithDates);
 taskSchema.plugin(paginate);
 
 /**
