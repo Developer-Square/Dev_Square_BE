@@ -42,15 +42,6 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'client',
     },
-    tasks: {
-      type: Array,
-      default: [],
-    },
-    skills: {
-      type: Array,
-      default: [],
-      required: true,
-    },
     status: {
       type: String,
       default: 'available',

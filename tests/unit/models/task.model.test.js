@@ -7,11 +7,11 @@ describe('Task model', () => {
     let newTask;
     beforeEach(() => {
       newTask = {
-        stack: 'node',
+        project: mongoose.Types.ObjectId(),
         creator: mongoose.Types.ObjectId(),
+        title: faker.lorem.sentence(3),
         description: faker.lorem.paragraph(),
         dueDate: faker.date.future(2),
-        difficulty: 'medium',
         status: 'inProgress',
       };
     });
@@ -20,8 +20,18 @@ describe('Task model', () => {
       await expect(new Task(newTask).validate()).resolves.toBeUndefined();
     });
 
-    test('should throw a validation error if difficulty is unknown', async () => {
-      newTask.difficulty = 'invalid';
+    test('should throw a validation error if status is unknown', async () => {
+      newTask.status = 'invalid';
+      await expect(new Task(newTask).validate()).rejects.toThrow();
+    });
+
+    test('should throw a validation error if project is not a mongoDB objectId', async () => {
+      newTask.project = 'invalid';
+      await expect(new Task(newTask).validate()).rejects.toThrow();
+    });
+
+    test('should throw a validation error if creator is not a mongoDB objectId', async () => {
+      newTask.creator = 'invalid';
       await expect(new Task(newTask).validate()).rejects.toThrow();
     });
   });
