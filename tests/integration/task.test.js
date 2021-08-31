@@ -7,7 +7,7 @@ const { Task } = require('../../src/models');
 const { userOne, admin, insertUsers, adminTwo, client } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken, clientAccessToken } = require('../fixtures/token.fixture');
 const { taskOne, taskTwo, taskThree, insertTasks, taskFour, taskFive, taskSix } = require('../fixtures/task.fixture');
-const { projectOne, insertProjects, projectTwo } = require('../fixtures/project.fixture');
+const { projectOne, insertProjects, projectTwo, projectThree } = require('../fixtures/project.fixture');
 
 setupTestDB();
 
@@ -56,6 +56,30 @@ describe('Task routes', () => {
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newTask)
         .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 404 error if creator does not exist', async () => {
+      await insertUsers([admin]);
+      await insertProjects([projectOne]);
+      newTask.creator = userOne._id;
+
+      await request(app)
+        .post('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newTask)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 error if project does not exist', async () => {
+      await insertUsers([admin]);
+      await insertProjects([projectOne]);
+      newTask.project = projectTwo._id;
+
+      await request(app)
+        .post('/v1/tasks')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newTask)
+        .expect(httpStatus.NOT_FOUND);
     });
   });
 
@@ -423,6 +447,24 @@ describe('Task routes', () => {
     test('should return 404 if admin is updating task that is not found', async () => {
       await request(app)
         .patch(`/v1/tasks/${taskTwo._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 if creator does not exist', async () => {
+      updateBody.creator = userOne._id;
+      await request(app)
+        .patch(`/v1/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 if project does not exist', async () => {
+      updateBody.project = projectThree._id;
+      await request(app)
+        .patch(`/v1/tasks/${taskOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);

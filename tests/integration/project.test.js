@@ -335,6 +335,18 @@ describe('Project routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
+    test('should return 404 if client does not exist', async () => {
+      await insertUsers([admin]);
+      await insertProjects([projectOne]);
+      const updateBody = { client: client._id };
+
+      await request(app)
+        .patch(`/v1/project/${projectTwo._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
     test('should return 400 error if ProjectId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertProjects([projectOne]);
