@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+const { toJSONWithDates, paginate } = require('./plugins');
+const User = require('./user.model');
 
 const projectSchema = mongoose.Schema(
   {
-    clientId: {
-      type: String,
+    client: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User,
       required: true,
-      trim: true,
     },
-    name: {
+    title: {
       type: String,
       required: true,
       trim: true,
@@ -22,14 +23,6 @@ const projectSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    stack: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    tasks: {
-      type: Array,
-    },
   },
   {
     timestamps: true,
@@ -37,28 +30,8 @@ const projectSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-projectSchema.plugin(toJSON);
+projectSchema.plugin(toJSONWithDates);
 projectSchema.plugin(paginate);
-
-/**
- * Aggregrate project with tasks
- * @param {string} projectId
- * @returns {Promise<Project>}
- */
-projectSchema.statics.aggregateTasks = async function () {
-  const aggregatedProjects = await this.aggregate([
-    {
-      $lookup: {
-        from: 'tasks',
-        localField: 'tasks',
-        foreignField: '_id',
-        as: 'task_data',
-      },
-    },
-  ]);
-
-  return aggregatedProjects;
-};
 
 /**
  * @typedef Project

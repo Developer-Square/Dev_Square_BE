@@ -37,9 +37,7 @@ describe('Auth routes', () => {
         id: expect.anything(),
         name: newUser.name,
         email: newUser.email,
-        role: 'user',
-        tasks: expect.anything(),
-        skills: expect.anything(),
+        role: 'client',
         status: expect.anything(),
       });
 
@@ -101,8 +99,6 @@ describe('Auth routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
-        tasks: userOne.tasks,
-        skills: userOne.skills,
         status: userOne.status,
       });
 

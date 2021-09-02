@@ -11,7 +11,6 @@ router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
-router.get('/refresh-site', authController.refreshSite);
 
 module.exports = router;
 
@@ -249,22 +248,4 @@ module.exports = router;
  *              example:
  *                code: 401
  *                message: Password reset failed
- */
-
-/**
- * @swagger
- * path:
- *  /auth/refresh-site:
- *    get:
- *      summary: Refresh site
- *      tags: [Auth]
- *      responses:
- *        "200":
- *          description: OK
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/Status'
- *              example:
- *                  status: true
  */

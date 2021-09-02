@@ -40,16 +40,7 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       enum: roles,
-      default: 'user',
-    },
-    tasks: {
-      type: Array,
-      default: [],
-    },
-    skills: {
-      type: Array,
-      default: [],
-      required: true,
+      default: 'client',
     },
     status: {
       type: String,
