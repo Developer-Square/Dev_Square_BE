@@ -13,8 +13,7 @@ const swaggerDef = {
   },
   servers: [
     {
-      url:
-        config.env === 'production' ? `https://developer-square-be.herokuapp.com/v1` : `http://localhost:${config.port}/v1`,
+      url: `http://localhost:${config.port}/v1`,
     },
   ],
 };
