@@ -91,7 +91,7 @@
     "lint-staged": "^10.0.7",
     "node-mocks-http": "^1.8.0",
     "nodemon": "^2.0.0",
-    "prettier": "^2.2.1",
+    "prettier": "^2.6.1",
     "supertest": "^6.0.1"
   }
 }
